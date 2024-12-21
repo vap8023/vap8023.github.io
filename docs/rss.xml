@@ -1,2 +1,36 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>过好每一天</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 23 Nov 2024 11:31:21 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>第一篇</title><link>https://vap8023.github.io/post/di-yi-pian.html</link><description>Hello World！！。</description><guid isPermaLink="true">https://vap8023.github.io/post/di-yi-pian.html</guid><pubDate>Sat, 23 Nov 2024 11:05:47 +0000</pubDate></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>过好每一天</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 21 Dec 2024 13:24:29 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>CentOS安装Docker</title><link>https://vap8023.github.io/post/CentOS-an-zhuang-Docker.html</link><description># 安装依赖&#13;
+```shell&#13;
+yum install - y yum-utils device-mapper-persistent-data lvm2&#13;
+```&#13;
+&#13;
+# 配置yum源&#13;
+```shell&#13;
+yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo&#13;
+```&#13;
+&#13;
+# 更新缓存&#13;
+```shell&#13;
+yum makecache fast&#13;
+&#13;
+yum install docker-ce&#13;
+```&#13;
+&#13;
+# 启动docker&#13;
+```shell&#13;
+systemctl enable docker&#13;
+systemctl start docker&#13;
+```&#13;
+&#13;
+# 镜像加速&#13;
+```shell&#13;
+vi /etc/docker/daemon.json&#13;
+# docker-cn&#13;
+{&#13;
+  'registry-mirrors': ['https://registry.docker-cn.com']&#13;
+}&#13;
+# 腾讯&#13;
+{&#13;
+  'registry-mirrors': ['https://mirror.ccs.tencentyun.com']&#13;
+}&#13;
+```。</description><guid isPermaLink="true">https://vap8023.github.io/post/CentOS-an-zhuang-Docker.html</guid><pubDate>Sat, 21 Dec 2024 13:20:15 +0000</pubDate></item><item><title>第一篇</title><link>https://vap8023.github.io/post/di-yi-pian.html</link><description>Hello World！！。</description><guid isPermaLink="true">https://vap8023.github.io/post/di-yi-pian.html</guid><pubDate>Sat, 23 Nov 2024 11:05:47 +0000</pubDate></item></channel></rss>
