@@ -1,5 +1,36 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Wed, 15 Jan 2025 15:44:00 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>Docker-compose安装，解决网速慢的问题</title><link>https://vap8023.github.io/post/Docker-compose-an-zhuang-%EF%BC%8C-jie-jue-wang-su-man-de-wen-ti.html</link><description>## Docker-compose&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Thu, 01 May 2025 16:03:30 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>告别爱优腾、用emby追剧真爽！</title><link>https://vap8023.github.io/post/gao-bie-ai-you-teng-%E3%80%81-yong-emby-zhui-ju-zhen-shuang-%EF%BC%81.html</link><description># 痛处
+以前追剧都是优酷、爱奇艺、腾讯视频；还需要借来借去的；很是麻烦；
+如果仅仅是集齐三家会员，你就能舒服看的话；
+各家还退出提前看、单集等额外收费点；
+总之一句话；
+**非常糟心**；
+
+# 接触emby后
+一个播放器软件；
+- 最近热播剧、新剧都可以看；
+- 国外剧、电影；
+- Netflix、apple tv、hbo
+- 听歌、有声读物等；
+
+# 什么是emby
+&gt; Emby是一款媒体库管理软件;
+&gt; 整理影视文件、有影视简介、演员信息、海报墙
+
+有一群人提供emby服务
+
+# 我的使用
+使用简单：选择一款播放器，填写emby服务地址、账号信息登录即可观看；
+服务能够直连还是需要梯子；看提供服务方的要求；
+软件选择：
+- IOS:  SenPlayer
+- 安卓: AfuseKt
+- 安卓TV:  小秘emby tv
+emby服务选择：
+目前按照公益服（字面意思，不收取费用、用爱发电）为主、可以在tg蹲个；
+目前体验了几家付费服、播放流畅度、资源方面都挺好；
+后续考虑入手一家；
+emby和机场类似，月付或靠谱的年付，不必重大投入；。</description><guid isPermaLink="true">https://vap8023.github.io/post/gao-bie-ai-you-teng-%E3%80%81-yong-emby-zhui-ju-zhen-shuang-%EF%BC%81.html</guid><pubDate>Thu, 01 May 2025 15:53:33 +0000</pubDate></item><item><title>Docker-compose安装，解决网速慢的问题</title><link>https://vap8023.github.io/post/Docker-compose-an-zhuang-%EF%BC%8C-jie-jue-wang-su-man-de-wen-ti.html</link><description>## Docker-compose&#13;
 作用：&#13;
 - 互访问题&#13;
 - 顺序依赖&#13;
