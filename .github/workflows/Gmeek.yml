@@ -1,4 +1,4 @@
-name: build Gmeek
+name: Build Gmeek Blog
 
 on:
   workflow_dispatch:
@@ -6,84 +6,135 @@ on:
     types: [opened, edited]
   schedule:
     - cron: "0 16 * * *"
-    
+
 jobs:
   build:
     name: Generate blog
     runs-on: ubuntu-24.04
     if: ${{ github.event.repository.owner.id == github.event.sender.id || github.event_name == 'schedule' }}
-    permissions: write-all
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    permissions:
+    contents: write
+    pages: write
+    id-token: write
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v4
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Get config.json
-        run: |
-          echo "====== check config.josn file ======"
-          cat config.json
-          echo "====== check config.josn end  ======"
-          sudo apt-get install jq
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
+    - name: Install jq
+      run: |
+        sudo apt-get update
+        sudo apt-get install jq -y
 
-      - name: Clone source code
-        run: |
-          GMEEK_VERSION=$(jq -r ".GMEEK_VERSION" config.json)
-          git clone https://github.com/Meekdai/Gmeek.git /opt/Gmeek;
-          cd /opt/Gmeek/
-          lastTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          if [ $GMEEK_VERSION == 'last' ]; then git checkout $lastTag; else git checkout $GMEEK_VERSION; fi;
+    - name: Show config.json
+      run: |
+        echo "====== config.json ======"
+        cat config.json
+        echo "========================="
 
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r /opt/Gmeek/requirements.txt
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        cache: "pip"
 
-      - name: Generate new html
-        run: |
-          cp -r ./* /opt/Gmeek/
-          cd /opt/Gmeek/
-          python Gmeek.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} --issue_number '${{ github.event.issue.number }}'
-          cp -a /opt/Gmeek/docs ${{ github.workspace }} 
-          cp -a /opt/Gmeek/backup ${{ github.workspace }} 
-          cp /opt/Gmeek/blogBase.json ${{ github.workspace }} 
-          
-      - name: update html
-        run: |
-          git config --local user.email "$(jq -r ".email" config.json)"
-          git config --local user.name "${{ github.repository_owner }}"
-          git add .
-          git commit -a -m '🎉auto update by Gmeek action' || echo "nothing to commit"
-          git push || echo "nothing to push"
-          sleep 3
-          
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'docs/.'
-          
+    - name: Clone Gmeek
+      run: |
+        GMEEK_VERSION=$(jq -r ".GMEEK_VERSION" config.json)
+        git clone https://github.com/Meekdai/Gmeek.git /opt/Gmeek
+        cd /opt/Gmeek
+        lastTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        if [ "$GMEEK_VERSION" = "last" ]; then
+          git checkout $lastTag
+        else
+          git checkout $GMEEK_VERSION
+        fi
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r /opt/Gmeek/requirements.txt
+
+    - name: Generate blog
+      run: |
+        cp -r ./* /opt/Gmeek/
+        cd /opt/Gmeek
+        python Gmeek.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} --issue_number '${{ github.event.issue.number }}'
+
+    - name: Rename HTML to short URL
+      run: |
+        cd /opt/Gmeek/docs
+        ISSUE_NUM=${{ github.event.issue.number }}
+        for f in *.html; do
+          mv "$f" "post-${ISSUE_NUM}.html"
+        done
+
+    - name: Generate sitemap.xml
+      run: |
+        SITE=$(jq -r ".blogUrl" config.json)
+
+        echo '<?xml version="1.0" encoding="UTF-8"?>' > /opt/Gmeek/docs/sitemap.xml
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> /opt/Gmeek/docs/sitemap.xml
+
+        for file in $(find /opt/Gmeek/docs -name "*.html"); do
+          url=$(echo $file | sed 's|/opt/Gmeek/docs||')
+          echo "<url><loc>${SITE}${url}</loc></url>" >> /opt/Gmeek/docs/sitemap.xml
+        done
+
+        echo '</urlset>' >> /opt/Gmeek/docs/sitemap.xml
+
+    - name: Generate robots.txt
+      run: |
+        SITE=$(jq -r ".blogUrl" config.json)
+
+        cat <<EOF > /opt/Gmeek/docs/robots.txt
+        User-agent: *
+        Allow: /
+        Sitemap: ${SITE}/sitemap.xml
+        EOF
+
+
+    - name: Copy build files
+      run: |
+        cp -a /opt/Gmeek/docs ${{ github.workspace }}
+        cp -a /opt/Gmeek/backup ${{ github.workspace }}
+        cp /opt/Gmeek/blogBase.json ${{ github.workspace }}
+
+    - name: Commit updates
+      run: |
+        git config --local user.email "$(jq -r ".email" config.json)"
+        git config --local user.name "${{ github.repository_owner }}"
+        git add .
+        git commit -m "🚀 auto update by Gmeek workflow" || echo "nothing to commit"
+        git push || echo "nothing to push"
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: docs
+
+
   deploy:
     name: Deploy blog
     runs-on: ubuntu-24.04
     needs: build
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-    concurrency:
-      group: "pages"
-      cancel-in-progress: false
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+  permissions:
+    contents: write
+    pages: write
+    id-token: write
+  concurrency:
+    group: pages
+    cancel-in-progress: false
+  environment:
+    name: github-pages
+    url: ${{ steps.deployment.outputs.page_url }}
+
+  steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
