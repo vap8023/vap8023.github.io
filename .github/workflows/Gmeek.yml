@@ -58,63 +58,61 @@ jobs:
       - name: Shorten URLs with Hash
         run: |
           cd ${{ github.workspace }}/docs
+          set -e
 
           # 创建短链接目录
           mkdir -p p
 
           echo "====== URL Shortening Process ======"
 
-          # 读取 blogBase.json 获取文章标题映射
-          if [[ -f "${{ github.workspace }}/blogBase.json" ]]; then
-            # 遍历 post 目录下的 HTML 文件
-            for html_file in post/*.html; do
-              if [[ -f "$html_file" ]]; then
-                # 提取文件名（不含扩展名）
-                filename=$(basename "$html_file" .html)
+          BLOG_BASE="${{ github.workspace }}/blogBase.json"
 
-                # 从 blogBase.json 获取对应标题
-                title=$(jq -r ".postList[\"$filename\"].postTitle // \"$filename\"" "${{ github.workspace }}/blogBase.json" 2>/dev/null)
-
-                # 如果标题为空，使用文件名
-                if [[ -z "$title" || "$title" == "null" ]]; then
-                  title="$filename"
-                fi
-
-                # 计算 MD5 前 8 位
-                hash=$(echo -n "$title" | md5sum | cut -c1-8)
-
-                # 新文件路径
-                new_file="p/${hash}.html"
-
-                # 复制文件到新位置
-                cp "$html_file" "$new_file"
-
-                echo "  $filename -> $hash (title: ${title:0:30}...)"
-              fi
-            done
-
-            # 删除原 post 目录
-            rm -rf post
-
-            # 更新所有 HTML 文件中的内部链接
-            for html in p/*.html *.html tag/*.html 2>/dev/null; do
-              if [[ -f "$html" ]]; then
-                # 替换 post/xxx.html 链接为 p/{hash}.html
-                while IFS= read -r line; do
-                  old_link=$(echo "$line" | grep -oP 'post/[^"]+\.html' | head -1)
-                  if [[ -n "$old_link" ]]; then
-                    old_name=$(basename "$old_link" .html)
-                    # 查找对应的 hash
-                    title=$(jq -r ".postList[\"$old_name\"].postTitle // \"$old_name\"" "${{ github.workspace }}/blogBase.json" 2>/dev/null)
-                    if [[ -n "$title" && "$title" != "null" ]]; then
-                      new_hash=$(echo -n "$title" | md5sum | cut -c1-8)
-                      sed -i "s|post/${old_name}\.html|p/${new_hash}.html|g" "$html"
-                    fi
-                  fi
-                done < <(grep -o 'post/[^"]*\.html' "$html" 2>/dev/null || true)
-              fi
-            done
+          # 检查 blogBase.json 是否存在
+          if [[ ! -f "$BLOG_BASE" ]]; then
+            echo "blogBase.json not found, skipping URL shortening"
+            exit 0
           fi
+
+          # 创建映射文件：原文件名 -> hash
+          MAP_FILE="/tmp/url_map.txt"
+          > "$MAP_FILE"
+
+          # 遍历 post 目录下的 HTML 文件
+          for html_file in post/*.html; do
+            if [[ -f "$html_file" ]]; then
+              filename=$(basename "$html_file" .html)
+
+              # 从 blogBase.json 获取标题
+              title=$(jq -r ".postList[\"$filename\"].postTitle // empty" "$BLOG_BASE")
+
+              if [[ -z "$title" || "$title" == "null" ]]; then
+                title="$filename"
+              fi
+
+              # 计算 MD5 前 8 位
+              hash=$(echo -n "$title" | md5sum | cut -c1-8)
+
+              # 记录映射
+              echo "${filename}:${hash}" >> "$MAP_FILE"
+
+              # 复制文件
+              cp "$html_file" "p/${hash}.html"
+
+              echo "  $filename -> $hash"
+            fi
+          done
+
+          # 删除原 post 目录
+          rm -rf post
+
+          echo "====== Updating internal links ======"
+
+          # 更新所有 HTML 中的链接
+          while IFS=: read -r old_name new_hash; do
+            [[ -z "$old_name" ]] && continue
+            # 查找并替换所有 HTML 文件中的链接
+            find . -name "*.html" -type f -exec sed -i "s|post/${old_name}\.html|p/${new_hash}.html|g" {} \;
+          done < "$MAP_FILE"
 
           echo "====== URL Shortening Complete ======"
 
