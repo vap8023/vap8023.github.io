@@ -79,28 +79,28 @@ jobs:
           MAP_FILE="/tmp/url_map.txt"
           > "$MAP_FILE"
 
-          # 遍历 post 目录下的 HTML 文件
+          # 从 blogBase.json 读取所有文章，生成完整映射
+          for key in $(jq -r '.postList | keys[]' "$BLOG_BASE"); do
+            title=$(jq -r ".postList[\"$key\"].postTitle // empty" "$BLOG_BASE")
+            if [[ -z "$title" || "$title" == "null" ]]; then
+              title="$key"
+            fi
+            hash=$(echo -n "$title" | md5sum | cut -c1-8)
+            echo "${key}:${hash}" >> "$MAP_FILE"
+          done
+
+          echo "====== URL Map from blogBase.json ======"
+          cat "$MAP_FILE"
+
+          # 处理 post 目录下实际存在的文件
           for html_file in post/*.html; do
             if [[ -f "$html_file" ]]; then
               filename=$(basename "$html_file" .html)
-
-              # 从 blogBase.json 获取标题
-              title=$(jq -r ".postList[\"$filename\"].postTitle // empty" "$BLOG_BASE")
-
-              if [[ -z "$title" || "$title" == "null" ]]; then
-                title="$filename"
+              hash=$(grep "^${filename}:" "$MAP_FILE" | cut -d: -f2)
+              if [[ -n "$hash" ]]; then
+                cp "$html_file" "p/${hash}.html"
+                echo "  Copied: $filename -> p/${hash}.html"
               fi
-
-              # 计算 MD5 前 8 位
-              hash=$(echo -n "$title" | md5sum | cut -c1-8)
-
-              # 记录映射
-              echo "${filename}:${hash}" >> "$MAP_FILE"
-
-              # 复制文件
-              cp "$html_file" "p/${hash}.html"
-
-              echo "  $filename -> $hash"
             fi
           done
 
@@ -109,7 +109,7 @@ jobs:
 
           echo "====== Updating internal links ======"
 
-          # 更新所有 HTML 中的链接
+          # 更新所有 HTML 中的链接和 blogBase.json
           while IFS=: read -r old_name new_hash; do
             [[ -z "$old_name" ]] && continue
             # URL 编码文件名
