@@ -1,5 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 00:53:57 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>Obsidian个人使用备忘录</title><link>https://vap8023.github.io/post/Obsidian-ge-ren-shi-yong-bei-wang-lu.html</link><description># 目录结构
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 00:58:39 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</link><description># 介绍
+&gt; 支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台
+[[GitHub地址](https://github.com/whyour/qinglong)](https://github.com/whyour/qinglong)
+# 安装青龙面板
+比较稳定的版本：2.11.3
+``` shell
+docker run -dit  -v $PWD/ql/data:/ql/data  -p 5700:5700  -e QlBaseUrl='/'  -e QlPort='5700'  --name qinglong  --hostname qinglong  --restart unless-stopped  yanyu.icu/whyour/qinglong:2.11.3
+```
+
+# 按照依赖：
+```shell
+docker exec -it qinglong bash -c '$(curl -fsSL https://git.metauniverse-cn.com/https://raw.githubusercontent.com/yanyuwangluo/VIP/main/Scripts/sh/ql-npm.sh)'
+```
+
+# 拉库脚本：
+仅供参考(非推荐)：
+```shell
+ql repo https://git.metauniverse-cn.com/https://github.com/shufflewzc/faker4.git 'jd_|jx_|gua_|jddj_|jdCookie' 'activity|backUp' '^jd[^_]|USER|function|utils|sendNotify|ZooFaker_Necklace.js|JDJRValidator_|sign_graphics_validate|ql|JDSignValidator|magic|depend|h5sts' 'main'
+```。</description><guid isPermaLink="true">https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</guid><pubDate>Sat, 07 Mar 2026 00:58:11 +0000</pubDate></item><item><title>Obsidian个人使用备忘录</title><link>https://vap8023.github.io/post/Obsidian-ge-ren-shi-yong-bei-wang-lu.html</link><description># 目录结构
 目录结构也是按照 月光博客示例文件目录 概念建立；
 - 00.Inbox
 - 01.MyDoc
