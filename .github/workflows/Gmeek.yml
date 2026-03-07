@@ -1,4 +1,4 @@
-name: Build Gmeek Blog
+name: build Gmeek
 
 on:
   workflow_dispatch:
@@ -6,135 +6,192 @@ on:
     types: [opened, edited]
   schedule:
     - cron: "0 16 * * *"
-
+    
 jobs:
   build:
     name: Generate blog
     runs-on: ubuntu-24.04
     if: ${{ github.event.repository.owner.id == github.event.sender.id || github.event_name == 'schedule' }}
-    permissions:
-    contents: write
-    pages: write
-    id-token: write
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
 
-    - name: Setup Pages
-      id: pages
-      uses: actions/configure-pages@v4
+      - name: Get config.json
+        run: |
+          echo "====== check config.josn file ======"
+          cat config.json
+          echo "====== check config.josn end  ======"
+          sudo apt-get install jq
 
-    - name: Install jq
-      run: |
-        sudo apt-get update
-        sudo apt-get install jq -y
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.8
 
-    - name: Show config.json
-      run: |
-        echo "====== config.json ======"
-        cat config.json
-        echo "========================="
+      - name: Clone source code
+        run: |
+          GMEEK_VERSION=$(jq -r ".GMEEK_VERSION" config.json)
+          git clone https://github.com/Meekdai/Gmeek.git /opt/Gmeek;
+          cd /opt/Gmeek/
+          lastTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          if [ $GMEEK_VERSION == 'last' ]; then git checkout $lastTag; else git checkout $GMEEK_VERSION; fi;
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-        cache: "pip"
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r /opt/Gmeek/requirements.txt
 
-    - name: Clone Gmeek
-      run: |
-        GMEEK_VERSION=$(jq -r ".GMEEK_VERSION" config.json)
-        git clone https://github.com/Meekdai/Gmeek.git /opt/Gmeek
-        cd /opt/Gmeek
-        lastTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-        if [ "$GMEEK_VERSION" = "last" ]; then
-          git checkout $lastTag
-        else
-          git checkout $GMEEK_VERSION
-        fi
+      - name: Generate new html
+        run: |
+          cp -r ./* /opt/Gmeek/
+          cd /opt/Gmeek/
+          python Gmeek.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} --issue_number '${{ github.event.issue.number }}'
+          cp -a /opt/Gmeek/docs ${{ github.workspace }} 
+          cp -a /opt/Gmeek/backup ${{ github.workspace }} 
+          cp /opt/Gmeek/blogBase.json ${{ github.workspace }} 
+          
+      - name: Shorten URLs with Hash
+        run: |
+          cd ${{ github.workspace }}/docs
 
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -r /opt/Gmeek/requirements.txt
+          # 创建短链接目录
+          mkdir -p p
 
-    - name: Generate blog
-      run: |
-        cp -r ./* /opt/Gmeek/
-        cd /opt/Gmeek
-        python Gmeek.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} --issue_number '${{ github.event.issue.number }}'
+          echo "====== URL Shortening Process ======"
 
-    - name: Rename HTML to short URL
-      run: |
-        cd /opt/Gmeek/docs
-        ISSUE_NUM=${{ github.event.issue.number }}
-        for f in *.html; do
-          mv "$f" "post-${ISSUE_NUM}.html"
-        done
+          # 读取 blogBase.json 获取文章标题映射
+          if [[ -f "${{ github.workspace }}/blogBase.json" ]]; then
+            # 遍历 post 目录下的 HTML 文件
+            for html_file in post/*.html; do
+              if [[ -f "$html_file" ]]; then
+                # 提取文件名（不含扩展名）
+                filename=$(basename "$html_file" .html)
 
-    - name: Generate sitemap.xml
-      run: |
-        SITE=$(jq -r ".blogUrl" config.json)
+                # 从 blogBase.json 获取对应标题
+                title=$(jq -r ".postList[\"$filename\"].postTitle // \"$filename\"" "${{ github.workspace }}/blogBase.json" 2>/dev/null)
 
-        echo '<?xml version="1.0" encoding="UTF-8"?>' > /opt/Gmeek/docs/sitemap.xml
-        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> /opt/Gmeek/docs/sitemap.xml
+                # 如果标题为空，使用文件名
+                if [[ -z "$title" || "$title" == "null" ]]; then
+                  title="$filename"
+                fi
 
-        for file in $(find /opt/Gmeek/docs -name "*.html"); do
-          url=$(echo $file | sed 's|/opt/Gmeek/docs||')
-          echo "<url><loc>${SITE}${url}</loc></url>" >> /opt/Gmeek/docs/sitemap.xml
-        done
+                # 计算 MD5 前 8 位
+                hash=$(echo -n "$title" | md5sum | cut -c1-8)
 
-        echo '</urlset>' >> /opt/Gmeek/docs/sitemap.xml
+                # 新文件路径
+                new_file="p/${hash}.html"
 
-    - name: Generate robots.txt
-      run: |
-        SITE=$(jq -r ".blogUrl" config.json)
+                # 复制文件到新位置
+                cp "$html_file" "$new_file"
 
-        cat <<EOF > /opt/Gmeek/docs/robots.txt
-        User-agent: *
-        Allow: /
-        Sitemap: ${SITE}/sitemap.xml
-        EOF
+                echo "  $filename -> $hash (title: ${title:0:30}...)"
+              fi
+            done
 
+            # 删除原 post 目录
+            rm -rf post
 
-    - name: Copy build files
-      run: |
-        cp -a /opt/Gmeek/docs ${{ github.workspace }}
-        cp -a /opt/Gmeek/backup ${{ github.workspace }}
-        cp /opt/Gmeek/blogBase.json ${{ github.workspace }}
+            # 更新所有 HTML 文件中的内部链接
+            for html in p/*.html *.html tag/*.html 2>/dev/null; do
+              if [[ -f "$html" ]]; then
+                # 替换 post/xxx.html 链接为 p/{hash}.html
+                while IFS= read -r line; do
+                  old_link=$(echo "$line" | grep -oP 'post/[^"]+\.html' | head -1)
+                  if [[ -n "$old_link" ]]; then
+                    old_name=$(basename "$old_link" .html)
+                    # 查找对应的 hash
+                    title=$(jq -r ".postList[\"$old_name\"].postTitle // \"$old_name\"" "${{ github.workspace }}/blogBase.json" 2>/dev/null)
+                    if [[ -n "$title" && "$title" != "null" ]]; then
+                      new_hash=$(echo -n "$title" | md5sum | cut -c1-8)
+                      sed -i "s|post/${old_name}\.html|p/${new_hash}.html|g" "$html"
+                    fi
+                  fi
+                done < <(grep -o 'post/[^"]*\.html' "$html" 2>/dev/null || true)
+              fi
+            done
+          fi
 
-    - name: Commit updates
-      run: |
-        git config --local user.email "$(jq -r ".email" config.json)"
-        git config --local user.name "${{ github.repository_owner }}"
-        git add .
-        git commit -m "🚀 auto update by Gmeek workflow" || echo "nothing to commit"
-        git push || echo "nothing to push"
+          echo "====== URL Shortening Complete ======"
 
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: docs
+      - name: Generate sitemap.xml and robots.txt
+        run: |
+          cd ${{ github.workspace }}/docs
 
+          # 获取 GitHub Pages URL
+          PAGES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
 
+          # 生成 sitemap.xml
+          cat > sitemap.xml << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+          EOF
+
+          # 添加首页
+          echo "  <url><loc>${PAGES_URL}/</loc><priority>1.0</priority></url>" >> sitemap.xml
+
+          # 遍历 HTML 文件生成 URL（使用短链接）
+          find . -name "*.html" -type f | while read file; do
+            # 跳过 index.html（已添加）
+            if [[ "$file" != "./index.html" ]]; then
+              # 转换文件路径为 URL 路径
+              url_path="${file#./}"
+              url_path="${url_path%.html}"
+              # 处理 index.html 子目录情况
+              if [[ "$url_path" == */index ]]; then
+                url_path="${url_path%/index}/"
+              fi
+              echo "  <url><loc>${PAGES_URL}/${url_path}</loc></url>" >> sitemap.xml
+            fi
+          done
+
+          echo "</urlset>" >> sitemap.xml
+
+          # 生成 robots.txt
+          cat > robots.txt << EOF
+          User-agent: *
+          Allow: /
+          Sitemap: ${PAGES_URL}/sitemap.xml
+          EOF
+
+          echo "====== Generated files ======"
+          head -20 sitemap.xml
+          echo "====== robots.txt ======"
+          cat robots.txt
+
+      - name: update html
+        run: |
+          git config --local user.email "$(jq -r ".email" config.json)"
+          git config --local user.name "${{ github.repository_owner }}"
+          git add .
+          git commit -a -m '🎉auto update by Gmeek action' || echo "nothing to commit"
+          git push || echo "nothing to push"
+          sleep 3
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'docs/.'
+          
   deploy:
     name: Deploy blog
     runs-on: ubuntu-24.04
     needs: build
-  permissions:
-    contents: write
-    pages: write
-    id-token: write
-  concurrency:
-    group: pages
-    cancel-in-progress: false
-  environment:
-    name: github-pages
-    url: ${{ steps.deployment.outputs.page_url }}
-
-  steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
-
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
