@@ -1,5 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 00:58:39 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</link><description># 介绍
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 01:00:35 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>基于月光博客新建的示例文件目录</title><link>https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</link><description># 文件夹示例
+大致可以分为以下几类：
+- 00InBox（下载目录 所有新的内容）
+- 01MyDoc（待归纳的 或者不知道放哪里的）
+- 02Archive（按照项目分 ）
+- 03Resource（网上下载内容）
+	- 安装包
+- 04Devlop （开发目录）
+	- Project (项目目录)
+	- Repository （Maven 仓库）
+- Software  （软件安装目录）
+# 流程
+文件夹示例与子弹笔记配合使用；
+- 每次接到任务，在每日子弹笔记进行记录；如果有相关资料，就在00InBox文件夹建立对应任务文件夹，文件的命名规范直接按照项目或需求名称命名_日期等；
+- 任务完成后 转移01MyDoc （笔记软件+文件夹）
+- 有时间归纳就归纳到 02Archive
+	- 归纳可以按照项目分类；类别分类；
+	- 目录分类建议采取麦肯锡提出的MECE原则；意思 “相互独立，完全穷尽”
+
+# 文件命名规范
+项目_标签_详细文档标题_版本_日期等，方便检索
+
+参考链接：[[基于文件和文档的知识管理技巧](https://www.williamlong.info/archives/6176.html)](https://www.williamlong.info/archives/6176.html)。</description><guid isPermaLink="true">https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</guid><pubDate>Sat, 07 Mar 2026 01:00:11 +0000</pubDate></item><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</link><description># 介绍
 &gt; 支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台
 [[GitHub地址](https://github.com/whyour/qinglong)](https://github.com/whyour/qinglong)
 # 安装青龙面板
