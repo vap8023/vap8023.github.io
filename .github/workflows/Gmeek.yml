@@ -110,8 +110,10 @@ jobs:
           # 更新所有 HTML 中的链接
           while IFS=: read -r old_name new_hash; do
             [[ -z "$old_name" ]] && continue
-            # 转义正则特殊字符，避免 sed 匹配失败
-            escaped_name=$(printf '%s\n' "$old_name" | sed 's/[.[\*^$()+?{|\\]/\\&/g')
+            # URL 编码文件名，匹配 HTML 中的编码链接
+            url_encoded_name=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$old_name'))")
+            # 转义正则特殊字符
+            escaped_name=$(printf '%s\n' "$url_encoded_name" | sed 's/[.[\*^$()+?{|\\%]/\\&/g')
             # 查找并替换所有 HTML 文件中的链接
             find . -name "*.html" -type f -exec sed -i "s|post/${escaped_name}\.html|p/${new_hash}.html|g" {} \;
           done < "$MAP_FILE"
