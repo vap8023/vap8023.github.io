@@ -139,12 +139,19 @@ jobs:
 
           echo "====== URL Shortening Complete ======"
 
-      - name: Generate sitemap.xml and robots.txt
+      - name: Generate sitemap.xml
         run: |
           cd ${{ github.workspace }}/docs
 
           # 获取 GitHub Pages URL
-          PAGES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          # 如果仓库名是 xxx.github.io 格式，URL 是 https://xxx.github.io/
+          # 否则 URL 是 https://xxx.github.io/repo-name/
+          REPO_NAME="${{ github.event.repository.name }}"
+          if [[ "$REPO_NAME" == *".github.io" ]]; then
+            PAGES_URL="https://${{ github.repository_owner }}.github.io"
+          else
+            PAGES_URL="https://${{ github.repository_owner }}.github.io/${REPO_NAME}"
+          fi
 
           # 生成 sitemap.xml
           cat > sitemap.xml << 'EOF'
@@ -155,34 +162,20 @@ jobs:
           # 添加首页
           echo "  <url><loc>${PAGES_URL}/</loc><priority>1.0</priority></url>" >> sitemap.xml
 
-          # 遍历 HTML 文件生成 URL（使用短链接）
+          # 遍历 HTML 文件生成 URL（保留 .html 后缀）
           find . -name "*.html" -type f | while read file; do
             # 跳过 index.html（已添加）
             if [[ "$file" != "./index.html" ]]; then
-              # 转换文件路径为 URL 路径
+              # 转换文件路径为 URL 路径（保留 .html 后缀）
               url_path="${file#./}"
-              url_path="${url_path%.html}"
-              # 处理 index.html 子目录情况
-              if [[ "$url_path" == */index ]]; then
-                url_path="${url_path%/index}/"
-              fi
               echo "  <url><loc>${PAGES_URL}/${url_path}</loc></url>" >> sitemap.xml
             fi
           done
 
           echo "</urlset>" >> sitemap.xml
 
-          # 生成 robots.txt
-          cat > robots.txt << EOF
-          User-agent: *
-          Allow: /
-          Sitemap: ${PAGES_URL}/sitemap.xml
-          EOF
-
-          echo "====== Generated files ======"
+          echo "====== Generated sitemap.xml ======"
           head -20 sitemap.xml
-          echo "====== robots.txt ======"
-          cat robots.txt
 
       - name: update html
         run: |
