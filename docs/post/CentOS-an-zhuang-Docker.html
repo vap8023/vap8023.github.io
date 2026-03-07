@@ -10,49 +10,81 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# 介绍
-> 支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台
-[[GitHub地址](https://github.com/whyour/qinglong)](https://github.com/whyour/qinglong)
-# 安装青龙面板
-比较稳定的版本：2.11.3
-``` shell
-docker run -dit  -v $PWD/ql/data:/ql/data  -p 5700:5700  -e QlBaseUrl='/'  -e QlPort='5700'  --name qinglong  --hostname qinglong  --restart unless-stopped  yanyu.icu/whyour/qinglong:2.11.3
+<meta name="description" content="# 安装依赖
+```shell
+yum install - y yum-utils device-mapper-persistent-data lvm2
 ```
 
-# 按照依赖：
+# 配置yum源
 ```shell
-docker exec -it qinglong bash -c '$(curl -fsSL https://git.metauniverse-cn.com/https://raw.githubusercontent.com/yanyuwangluo/VIP/main/Scripts/sh/ql-npm.sh)'
+yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
 ```
 
-# 拉库脚本：
-仅供参考(非推荐)：
+# 更新缓存
 ```shell
-ql repo https://git.metauniverse-cn.com/https://github.com/shufflewzc/faker4.git 'jd_|jx_|gua_|jddj_|jdCookie' 'activity|backUp' '^jd[^_]|USER|function|utils|sendNotify|ZooFaker_Necklace.js|JDJRValidator_|sign_graphics_validate|ql|JDSignValidator|magic|depend|h5sts' 'main'
+yum makecache fast
+
+yum install docker-ce
+```
+
+# 启动docker
+```shell
+systemctl enable docker
+systemctl start docker
+```
+
+# 镜像加速
+```shell
+vi /etc/docker/daemon.json
+# docker-cn
+{
+  'registry-mirrors': ['https://registry.docker-cn.com']
+}
+# 腾讯
+{
+  'registry-mirrors': ['https://mirror.ccs.tencentyun.com']
+}
 ```。">
-<meta property="og:title" content="青龙面板搭建教程合集">
-<meta property="og:description" content="# 介绍
-> 支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台
-[[GitHub地址](https://github.com/whyour/qinglong)](https://github.com/whyour/qinglong)
-# 安装青龙面板
-比较稳定的版本：2.11.3
-``` shell
-docker run -dit  -v $PWD/ql/data:/ql/data  -p 5700:5700  -e QlBaseUrl='/'  -e QlPort='5700'  --name qinglong  --hostname qinglong  --restart unless-stopped  yanyu.icu/whyour/qinglong:2.11.3
+<meta property="og:title" content="CentOS安装Docker">
+<meta property="og:description" content="# 安装依赖
+```shell
+yum install - y yum-utils device-mapper-persistent-data lvm2
 ```
 
-# 按照依赖：
+# 配置yum源
 ```shell
-docker exec -it qinglong bash -c '$(curl -fsSL https://git.metauniverse-cn.com/https://raw.githubusercontent.com/yanyuwangluo/VIP/main/Scripts/sh/ql-npm.sh)'
+yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
 ```
 
-# 拉库脚本：
-仅供参考(非推荐)：
+# 更新缓存
 ```shell
-ql repo https://git.metauniverse-cn.com/https://github.com/shufflewzc/faker4.git 'jd_|jx_|gua_|jddj_|jdCookie' 'activity|backUp' '^jd[^_]|USER|function|utils|sendNotify|ZooFaker_Necklace.js|JDJRValidator_|sign_graphics_validate|ql|JDSignValidator|magic|depend|h5sts' 'main'
+yum makecache fast
+
+yum install docker-ce
+```
+
+# 启动docker
+```shell
+systemctl enable docker
+systemctl start docker
+```
+
+# 镜像加速
+```shell
+vi /etc/docker/daemon.json
+# docker-cn
+{
+  'registry-mirrors': ['https://registry.docker-cn.com']
+}
+# 腾讯
+{
+  'registry-mirrors': ['https://mirror.ccs.tencentyun.com']
+}
 ```。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://vap8023.github.io/p/210c3bbf.html">
+<meta property="og:url" content="https://vap8023.github.io/post/CentOS-an-zhuang-Docker.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/92523479?v=4">
-<title>青龙面板搭建教程合集</title>
+<title>CentOS安装Docker</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
@@ -95,7 +127,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">青龙面板搭建教程合集</h1>
+<h1 class="postTitle">CentOS安装Docker</h1>
 <div class="title-right">
     <a href="https://vap8023.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -103,7 +135,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/vap8023/vap8023.github.io/issues/12" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/vap8023/vap8023.github.io/issues/2" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -119,19 +151,27 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>介绍</h1>
-<blockquote>
-<p>支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台<br>
-[<a href="https://github.com/whyour/qinglong">GitHub地址</a>](<a href="https://github.com/whyour/qinglong">https://github.com/whyour/qinglong</a>)</p>
-</blockquote>
-<h1>安装青龙面板</h1>
-<p>比较稳定的版本：2.11.3</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -dit  -v <span class="pl-smi">$PWD</span>/ql/data:/ql/data  -p 5700:5700  -e QlBaseUrl=<span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>  -e QlPort=<span class="pl-s"><span class="pl-pds">"</span>5700<span class="pl-pds">"</span></span>  --name qinglong  --hostname qinglong  --restart unless-stopped  yanyu.icu/whyour/qinglong:2.11.3</pre></div>
-<h1>按照依赖：</h1>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker <span class="pl-c1">exec</span> -it qinglong bash -c <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>curl -fsSL https://git.metauniverse-cn.com/https://raw.githubusercontent.com/yanyuwangluo/VIP/main/Scripts/sh/ql-npm.sh<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span></pre></div>
-<h1>拉库脚本：</h1>
-<p>仅供参考(非推荐)：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">ql repo https://git.metauniverse-cn.com/https://github.com/shufflewzc/faker4.git <span class="pl-s"><span class="pl-pds">"</span>jd_|jx_|gua_|jddj_|jdCookie<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>activity|backUp<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>^jd[^_]|USER|function|utils|sendNotify|ZooFaker_Necklace.js|JDJRValidator_|sign_graphics_validate|ql|JDSignValidator|magic|depend|h5sts<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>main<span class="pl-pds">"</span></span></pre></div></div>
+<div class="markdown-body" id="postBody"><h1>安装依赖</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">yum install - y yum-utils device-mapper-persistent-data lvm2</pre></div>
+<h1>配置yum源</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo</pre></div>
+<h1>更新缓存</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">yum makecache fast
+
+yum install docker-ce</pre></div>
+<h1>启动docker</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl <span class="pl-c1">enable</span> docker
+systemctl start docker</pre></div>
+<h1>镜像加速</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">vi /etc/docker/daemon.json
+<span class="pl-c"><span class="pl-c">#</span> docker-cn</span>
+{
+  <span class="pl-s"><span class="pl-pds">"</span>registry-mirrors<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>https://registry.docker-cn.com<span class="pl-pds">"</span></span>]
+}
+<span class="pl-c"><span class="pl-c">#</span> 腾讯</span>
+{
+  <span class="pl-s"><span class="pl-pds">"</span>registry-mirrors<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>https://mirror.ccs.tencentyun.com<span class="pl-pds">"</span></span>]
+}</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
