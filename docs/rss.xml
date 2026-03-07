@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 02:08:25 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>[file-dir]基于月光博客新建的示例文件目录</title><link>https://vap8023.github.io/post/%5Bfile-dir%5D-ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</link><description>slug: file-dir
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 02:09:37 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>基于月光博客新建的示例文件目录</title><link>https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</link><description>slug: file-dir
 # 文件夹示例
 大致可以分为以下几类：
 - 00InBox（下载目录 所有新的内容）
@@ -22,7 +22,7 @@
 # 文件命名规范
 项目_标签_详细文档标题_版本_日期等，方便检索
 
-参考链接：[[基于文件和文档的知识管理技巧](https://www.williamlong.info/archives/6176.html)](https://www.williamlong.info/archives/6176.html)。</description><guid isPermaLink="true">https://vap8023.github.io/post/%5Bfile-dir%5D-ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</guid><pubDate>Sat, 07 Mar 2026 01:00:11 +0000</pubDate></item><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</link><description># 介绍
+参考链接：[[基于文件和文档的知识管理技巧](https://www.williamlong.info/archives/6176.html)](https://www.williamlong.info/archives/6176.html)。</description><guid isPermaLink="true">https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</guid><pubDate>Sat, 07 Mar 2026 01:00:11 +0000</pubDate></item><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</link><description># 介绍
 &gt; 支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台
 [[GitHub地址](https://github.com/whyour/qinglong)](https://github.com/whyour/qinglong)
 # 安装青龙面板
