@@ -10,19 +10,21 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="免费域名，180天免费续费延长；
-地址：https://dash.domain.digitalplat.org/panel/main
-
-<img width='2075' height='1020' alt='Image' src='https://github.com/user-attachments/assets/18d61d24-6410-433e-ad3b-bb60ab1b471a' />。">
-<meta property="og:title" content="dpdns.org域名免费续费">
-<meta property="og:description" content="免费域名，180天免费续费延长；
-地址：https://dash.domain.digitalplat.org/panel/main
-
-<img width='2075' height='1020' alt='Image' src='https://github.com/user-attachments/assets/18d61d24-6410-433e-ad3b-bb60ab1b471a' />。">
+<meta name="description" content="# 准备软件
+- Charles
+- iTunes 12.6.3
+# Charles安装证书
+下载好Charles安装好之后，需要安装一个SSL证书。">
+<meta property="og:title" content="利用Charles抓取ios旧版App">
+<meta property="og:description" content="# 准备软件
+- Charles
+- iTunes 12.6.3
+# Charles安装证书
+下载好Charles安装好之后，需要安装一个SSL证书。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://vap8023.github.io/p/45b70586.html">
+<meta property="og:url" content="https://vap8023.github.io/p/846b41bc.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/92523479?v=4">
-<title>dpdns.org域名免费续费</title>
+<title>利用Charles抓取ios旧版App</title>
 
 
 
@@ -55,7 +57,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">dpdns.org域名免费续费</h1>
+<h1 class="postTitle">利用Charles抓取ios旧版App</h1>
 <div class="title-right">
     <a href="https://vap8023.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -63,7 +65,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/vap8023/vap8023.github.io/issues/9" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/vap8023/vap8023.github.io/issues/3" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -79,9 +81,52 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>免费域名，180天免费续费延长；<br>
-地址：<a href="https://dash.domain.digitalplat.org/panel/main" rel="nofollow">https://dash.domain.digitalplat.org/panel/main</a></p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/18d61d24-6410-433e-ad3b-bb60ab1b471a"><img width="2000" height="1020" alt="Image" src="https://github.com/user-attachments/assets/18d61d24-6410-433e-ad3b-bb60ab1b471a" style="max-width: 100%; height: auto; max-height: 1020px;"></a></p></div>
+<div class="markdown-body" id="postBody"><h1>准备软件</h1>
+<ul>
+<li>Charles</li>
+<li>iTunes 12.6.3</li>
+</ul>
+<h1>Charles安装证书</h1>
+<p>下载好Charles安装好之后，需要安装一个SSL证书。具体步骤如下<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/5295a917-eb28-401c-8422-6514b360df1d"><img src="https://github.com/user-attachments/assets/5295a917-eb28-401c-8422-6514b360df1d" alt="1" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c3f39fbd-f6f5-443b-a7da-eb17b3ac04df"><img src="https://github.com/user-attachments/assets/c3f39fbd-f6f5-443b-a7da-eb17b3ac04df" alt="2" style="max-width: 100%;"></a></p>
+<h1>抓包步骤</h1>
+<ol>
+<li>关闭系统的代理，打开Charles。</li>
+<li>打开iTunes下载一个软件，我这里以有道词典为例<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f1e76b3e-5346-46d6-8581-2af21477d776"><img src="https://github.com/user-attachments/assets/f1e76b3e-5346-46d6-8581-2af21477d776" alt="Pasted image 20241222221132" style="max-width: 100%;"></a></li>
+<li>右击这个域名，选择<strong>Enable SSL Proxying</strong>。然后我们切回到iTunes，重新下载该软件。<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a9e207bc-f15f-4ef1-a50b-ef106e235da9"><img src="https://github.com/user-attachments/assets/a9e207bc-f15f-4ef1-a50b-ef106e235da9" alt="Pasted image 20241222221152" style="max-width: 100%;"></a></li>
+<li>点击展开域名<strong>WebObjects/MZBuy.woa/wa/buyProduct</strong>，右侧信息栏中，点击<strong>Context</strong>&gt;&gt;<strong>选择XML Text格式</strong><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/27a04a61-5bd6-4afa-9eb9-a4cfe2fa1185"><img src="https://github.com/user-attachments/assets/27a04a61-5bd6-4afa-9eb9-a4cfe2fa1185" alt="Pasted image 20241222223143" style="max-width: 100%;"></a></li>
+<li><a href="https://api.unlimapps.com/v1/apple_apps/%5B%E4%BD%A0%E8%8E%B7%E5%BE%97%E7%9A%84appID%5D/versions" rel="nofollow">通过appID获取所有版本</a>  可以查看所有版本和日期。通过抓包也是可以获取到版本号信息。位于****中间就是版本号。<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4dbdd5ea-4495-48b3-bd05-067797a76c20"><img src="https://github.com/user-attachments/assets/4dbdd5ea-4495-48b3-bd05-067797a76c20" alt="Pasted image 20241222223230" style="max-width: 100%;"></a><br>
+appID获取可以通过iTunes复制应用连接获取到appID<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d22a82a1-10fc-4583-818b-da50b1948995"><img src="https://github.com/user-attachments/assets/d22a82a1-10fc-4583-818b-da50b1948995" alt="Pasted image 20241222223253" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ba55f3bb-3336-40c3-90cc-5f50f908f352"><img src="https://github.com/user-attachments/assets/ba55f3bb-3336-40c3-90cc-5f50f908f352" alt="Pasted image 20241222223307" style="max-width: 100%;"></a><br>
+下载的ipa文件可以通过资料库查看，确实是老版本iTunes。<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ba07b850-a085-4ddf-b3df-43b09f6c1be5"><img src="https://github.com/user-attachments/assets/ba07b850-a085-4ddf-b3df-43b09f6c1be5" alt="Pasted image 20241222223351" style="max-width: 100%;"></a></li>
+</ol>
+<h1>流程梳理</h1>
+<ol>
+<li>Charles安装SSL证书</li>
+<li>iTunes第一次下载app，注意域名“p(xx)-buy.itunes.apple.com”，开启”Enable SSL Proxying“</li>
+<li>iTunes第二次下载app,查看版本号信息，打断点”breakpoint“</li>
+<li>iTunes第三次下载app，修改”appExtVrsId“值，即版本号</li>
+<li>iTunes资料库获取 ipa文件</li>
+</ol>
+<h1>ipa如何安装</h1>
+<ul>
+<li>利用iTunes 安装到iPhone</li>
+<li>通过第三方软件安装</li>
+<li>利用一些脚本软件或者捷径等安装ipa</li>
+</ul>
+<h1>抓包旧版App好处</h1>
+<ul>
+<li>旧版本可能存在一些好用的功能，比如追书神器这类app</li>
+<li>旧版本可能存在买断版本，lifetime等等</li>
+<li>或者新版本用的不舒服，想换回老版本</li>
+</ul></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
