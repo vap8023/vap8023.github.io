@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 04:04:34 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>基于月光博客新建的示例文件目录</title><link>https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</link><description># 文件夹示例
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Sat, 07 Mar 2026 04:23:17 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>基于月光博客新建的示例文件目录</title><link>https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</link><description># 文件夹示例
 大致可以分为以下几类：
 - 00InBox（下载目录 所有新的内容）
 - 01MyDoc（待归纳的 或者不知道放哪里的）
@@ -21,7 +21,8 @@
 # 文件命名规范
 项目_标签_详细文档标题_版本_日期等，方便检索
 
-参考链接：[[基于文件和文档的知识管理技巧](https://www.williamlong.info/archives/6176.html)](https://www.williamlong.info/archives/6176.html)。</description><guid isPermaLink="true">https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</guid><pubDate>Sat, 07 Mar 2026 01:00:11 +0000</pubDate></item><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</link><description># 介绍
+参考链接：[[基于文件和文档的知识管理技巧](https://www.williamlong.info/archives/6176.html)](https://www.williamlong.info/archives/6176.html)
+。</description><guid isPermaLink="true">https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</guid><pubDate>Sat, 07 Mar 2026 01:00:11 +0000</pubDate></item><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/p/210c3bbf.html</link><description># 介绍
 &gt; 支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台
 [[GitHub地址](https://github.com/whyour/qinglong)](https://github.com/whyour/qinglong)
 # 安装青龙面板
@@ -39,7 +40,7 @@ docker exec -it qinglong bash -c '$(curl -fsSL https://git.metauniverse-cn.com/h
 仅供参考(非推荐)：
 ```shell
 ql repo https://git.metauniverse-cn.com/https://github.com/shufflewzc/faker4.git 'jd_|jx_|gua_|jddj_|jdCookie' 'activity|backUp' '^jd[^_]|USER|function|utils|sendNotify|ZooFaker_Necklace.js|JDJRValidator_|sign_graphics_validate|ql|JDSignValidator|magic|depend|h5sts' 'main'
-```。</description><guid isPermaLink="true">https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</guid><pubDate>Sat, 07 Mar 2026 00:58:11 +0000</pubDate></item><item><title>Obsidian个人使用备忘录</title><link>https://vap8023.github.io/post/Obsidian-ge-ren-shi-yong-bei-wang-lu.html</link><description># 目录结构
+```。</description><guid isPermaLink="true">https://vap8023.github.io/p/210c3bbf.html</guid><pubDate>Sat, 07 Mar 2026 00:58:11 +0000</pubDate></item><item><title>Obsidian个人使用备忘录</title><link>https://vap8023.github.io/p/a17ddf71.html</link><description># 目录结构
 目录结构也是按照 月光博客示例文件目录 概念建立；
 - 00.Inbox
 - 01.MyDoc
@@ -59,11 +60,11 @@ ql repo https://git.metauniverse-cn.com/https://github.com/shufflewzc/faker4.git
 
 # 插件推荐
 - Copy Image 仅了复制笔记中图片贴到其他地方
-。</description><guid isPermaLink="true">https://vap8023.github.io/post/Obsidian-ge-ren-shi-yong-bei-wang-lu.html</guid><pubDate>Tue, 03 Mar 2026 09:19:22 +0000</pubDate></item><item><title>Claude code新手入门</title><link>https://vap8023.github.io/post/Claude%20code-xin-shou-ru-men.html</link><description>## 安装
-Claude Code是一个智能编码工具，可以在终端运行，通过自然语言交互，完成代码编写、调试等工作。</description><guid isPermaLink="true">https://vap8023.github.io/post/Claude%20code-xin-shou-ru-men.html</guid><pubDate>Sun, 08 Feb 2026 12:11:18 +0000</pubDate></item><item><title>dpdns.org域名免费续费</title><link>https://vap8023.github.io/post/dpdns.org-yu-ming-mian-fei-xu-fei.html</link><description>免费域名，180天免费续费延长；
+。</description><guid isPermaLink="true">https://vap8023.github.io/p/a17ddf71.html</guid><pubDate>Tue, 03 Mar 2026 09:19:22 +0000</pubDate></item><item><title>Claude code新手入门</title><link>https://vap8023.github.io/p/9f953fd2.html</link><description>## 安装
+Claude Code是一个智能编码工具，可以在终端运行，通过自然语言交互，完成代码编写、调试等工作。</description><guid isPermaLink="true">https://vap8023.github.io/p/9f953fd2.html</guid><pubDate>Sun, 08 Feb 2026 12:11:18 +0000</pubDate></item><item><title>dpdns.org域名免费续费</title><link>https://vap8023.github.io/p/040458d3.html</link><description>免费域名，180天免费续费延长；
 地址：https://dash.domain.digitalplat.org/panel/main
 
-&lt;img width='2075' height='1020' alt='Image' src='https://github.com/user-attachments/assets/18d61d24-6410-433e-ad3b-bb60ab1b471a' /&gt;。</description><guid isPermaLink="true">https://vap8023.github.io/post/dpdns.org-yu-ming-mian-fei-xu-fei.html</guid><pubDate>Wed, 14 Jan 2026 14:31:48 +0000</pubDate></item><item><title>告别爱优腾、用emby追剧真爽！</title><link>https://vap8023.github.io/post/gao-bie-ai-you-teng-%E3%80%81-yong-emby-zhui-ju-zhen-shuang-%EF%BC%81.html</link><description># 痛处
+&lt;img width='2075' height='1020' alt='Image' src='https://github.com/user-attachments/assets/18d61d24-6410-433e-ad3b-bb60ab1b471a' /&gt;。</description><guid isPermaLink="true">https://vap8023.github.io/p/040458d3.html</guid><pubDate>Wed, 14 Jan 2026 14:31:48 +0000</pubDate></item><item><title>告别爱优腾、用emby追剧真爽！</title><link>https://vap8023.github.io/p/4e3bcc9d.html</link><description># 痛处
 以前追剧都是优酷、爱奇艺、腾讯视频；还需要借来借去的；很是麻烦；
 如果仅仅是集齐三家会员，你就能舒服看的话；
 各家还退出提前看、单集等额外收费点；
@@ -94,7 +95,7 @@ emby服务选择：
 目前按照公益服（字面意思，不收取费用、用爱发电）为主、可以在tg蹲个；
 目前体验了几家付费服、播放流畅度、资源方面都挺好；
 后续考虑入手一家；
-emby和机场类似，月付或靠谱的年付，不必重大投入；。</description><guid isPermaLink="true">https://vap8023.github.io/post/gao-bie-ai-you-teng-%E3%80%81-yong-emby-zhui-ju-zhen-shuang-%EF%BC%81.html</guid><pubDate>Thu, 01 May 2025 15:53:33 +0000</pubDate></item><item><title>Docker-compose安装，解决网速慢的问题</title><link>https://vap8023.github.io/post/Docker-compose-an-zhuang-%EF%BC%8C-jie-jue-wang-su-man-de-wen-ti.html</link><description>## Docker-compose&#13;
+emby和机场类似，月付或靠谱的年付，不必重大投入；。</description><guid isPermaLink="true">https://vap8023.github.io/p/4e3bcc9d.html</guid><pubDate>Thu, 01 May 2025 15:53:33 +0000</pubDate></item><item><title>Docker-compose安装，解决网速慢的问题</title><link>https://vap8023.github.io/p/39a2bd44.html</link><description>## Docker-compose&#13;
 作用：&#13;
 - 互访问题&#13;
 - 顺序依赖&#13;
@@ -119,10 +120,10 @@ sudo chmod +x /usr/local/bin/docker-compose&#13;
 ```shell&#13;
 docker-compose -version&#13;
 ```&#13;
-如果能够出现版本信息，说明安装没有问题；。</description><guid isPermaLink="true">https://vap8023.github.io/post/Docker-compose-an-zhuang-%EF%BC%8C-jie-jue-wang-su-man-de-wen-ti.html</guid><pubDate>Tue, 24 Dec 2024 15:05:44 +0000</pubDate></item><item><title>Sublime text一些好用的插件，方便提升工作效率</title><link>https://vap8023.github.io/post/Sublime%20text-yi-xie-hao-yong-de-cha-jian-%EF%BC%8C-fang-bian-ti-sheng-gong-zuo-xiao-lv.html</link><description>## Package Control&#13;
+如果能够出现版本信息，说明安装没有问题；。</description><guid isPermaLink="true">https://vap8023.github.io/p/39a2bd44.html</guid><pubDate>Tue, 24 Dec 2024 15:05:44 +0000</pubDate></item><item><title>Sublime text一些好用的插件，方便提升工作效率</title><link>https://vap8023.github.io/p/b8883723.html</link><description>## Package Control&#13;
 首先需要安装Package Control；&#13;
 `Tool`安装Package Control;&#13;
-安装好之后，就可以通过Package Control，安装其他插件。</description><guid isPermaLink="true">https://vap8023.github.io/post/Sublime%20text-yi-xie-hao-yong-de-cha-jian-%EF%BC%8C-fang-bian-ti-sheng-gong-zuo-xiao-lv.html</guid><pubDate>Tue, 24 Dec 2024 15:04:37 +0000</pubDate></item><item><title>Windows新系统常用配置</title><link>https://vap8023.github.io/post/Windows-xin-xi-tong-chang-yong-pei-zhi.html</link><description>## 新机配置&#13;
+安装好之后，就可以通过Package Control，安装其他插件。</description><guid isPermaLink="true">https://vap8023.github.io/p/b8883723.html</guid><pubDate>Tue, 24 Dec 2024 15:04:37 +0000</pubDate></item><item><title>Windows新系统常用配置</title><link>https://vap8023.github.io/p/9c5c905a.html</link><description>## 新机配置&#13;
 &#13;
 对于新的Windows系统，以下几个设置需要进行调整：&#13;
 1. 防火墙关闭&#13;
@@ -149,17 +150,17 @@ docker-compose -version&#13;
 &#13;
 关于没有该值修改，可以通过以下两种方式：&#13;
 方法一：复制：`reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender' /v 'DisableAntiSpyware' /d 1 /t REG_DWORD /f`命令，在管理员命令提示符窗口中右键点击空白处；&#13;
-方法二：在注册表编辑器中新建DisableAntiSpyware的DWORD（32位）值 ，可以彻底禁用Windows10系统的Windows Defender。</description><guid isPermaLink="true">https://vap8023.github.io/post/Windows-xin-xi-tong-chang-yong-pei-zhi.html</guid><pubDate>Tue, 24 Dec 2024 15:02:46 +0000</pubDate></item><item><title>Netflix从业者自述</title><link>https://vap8023.github.io/post/Netflix-cong-ye-zhe-zi-shu.html</link><description># 个人经历&#13;
+方法二：在注册表编辑器中新建DisableAntiSpyware的DWORD（32位）值 ，可以彻底禁用Windows10系统的Windows Defender。</description><guid isPermaLink="true">https://vap8023.github.io/p/9c5c905a.html</guid><pubDate>Tue, 24 Dec 2024 15:02:46 +0000</pubDate></item><item><title>Netflix从业者自述</title><link>https://vap8023.github.io/p/1ed2f2cc.html</link><description># 个人经历&#13;
 ## 接触Netflix&#13;
 &gt; 我是在2019年3月份接触到Netflix，当时是为了找一部剧的资源，看到Netflix平台有资源；之后又google到Netflix账号可以白嫖，白嫖的方式就是通过不断尝试BIN码试出来Netflix试用账号；这也引出来Netflix第一个阶段吧！&#13;
 &#13;
 # 中国人的Netflix&#13;
 ## BIN&#13;
-用BIN开Netflix应该算第一批Netflix从业者的方式吧。</description><guid isPermaLink="true">https://vap8023.github.io/post/Netflix-cong-ye-zhe-zi-shu.html</guid><pubDate>Tue, 24 Dec 2024 14:58:43 +0000</pubDate></item><item><title>利用Charles抓取ios旧版App</title><link>https://vap8023.github.io/post/li-yong-Charles-zhua-qu-ios-jiu-ban-App.html</link><description># 准备软件&#13;
+用BIN开Netflix应该算第一批Netflix从业者的方式吧。</description><guid isPermaLink="true">https://vap8023.github.io/p/1ed2f2cc.html</guid><pubDate>Tue, 24 Dec 2024 14:58:43 +0000</pubDate></item><item><title>利用Charles抓取ios旧版App</title><link>https://vap8023.github.io/p/846b41bc.html</link><description># 准备软件&#13;
 - Charles&#13;
 - iTunes 12.6.3&#13;
 # Charles安装证书&#13;
-下载好Charles安装好之后，需要安装一个SSL证书。</description><guid isPermaLink="true">https://vap8023.github.io/post/li-yong-Charles-zhua-qu-ios-jiu-ban-App.html</guid><pubDate>Sun, 22 Dec 2024 14:54:42 +0000</pubDate></item><item><title>CentOS安装Docker</title><link>https://vap8023.github.io/post/CentOS-an-zhuang-Docker.html</link><description># 安装依赖&#13;
+下载好Charles安装好之后，需要安装一个SSL证书。</description><guid isPermaLink="true">https://vap8023.github.io/p/846b41bc.html</guid><pubDate>Sun, 22 Dec 2024 14:54:42 +0000</pubDate></item><item><title>CentOS安装Docker</title><link>https://vap8023.github.io/p/79c6042d.html</link><description># 安装依赖&#13;
 ```shell&#13;
 yum install - y yum-utils device-mapper-persistent-data lvm2&#13;
 ```&#13;
@@ -193,4 +194,4 @@ vi /etc/docker/daemon.json&#13;
 {&#13;
   'registry-mirrors': ['https://mirror.ccs.tencentyun.com']&#13;
 }&#13;
-```。</description><guid isPermaLink="true">https://vap8023.github.io/post/CentOS-an-zhuang-Docker.html</guid><pubDate>Sat, 21 Dec 2024 13:20:15 +0000</pubDate></item><item><title>关于我</title><link>https://vap8023.github.io/about.html</link><description>本人生性懒散，本职工作Java程序员，平时喜欢研究新鲜事物（和技术无关），用我老婆的话说研究这些有的没得，有什么用。</description><guid isPermaLink="true">https://vap8023.github.io/about.html</guid><pubDate>Sat, 23 Nov 2024 11:05:47 +0000</pubDate></item></channel></rss>
+```。</description><guid isPermaLink="true">https://vap8023.github.io/p/79c6042d.html</guid><pubDate>Sat, 21 Dec 2024 13:20:15 +0000</pubDate></item><item><title>关于我</title><link>https://vap8023.github.io/about.html</link><description>本人生性懒散，本职工作Java程序员，平时喜欢研究新鲜事物（和技术无关），用我老婆的话说研究这些有的没得，有什么用。</description><guid isPermaLink="true">https://vap8023.github.io/about.html</guid><pubDate>Sat, 23 Nov 2024 11:05:47 +0000</pubDate></item></channel></rss>
