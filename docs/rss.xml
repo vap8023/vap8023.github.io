@@ -1,2 +1,197 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Mon, 27 Apr 2026 17:16:52 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>LeLe Blog</title><link>https://vap8023.github.io</link><description>卷不过，只能靠歪门邪道了。</description><copyright>LeLe Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/92523479?v=4</url><title>avatar</title><link>https://vap8023.github.io</link></image><lastBuildDate>Tue, 28 Apr 2026 17:42:36 +0000</lastBuildDate><managingEditor>LeLe Blog</managingEditor><ttl>60</ttl><webMaster>LeLe Blog</webMaster><item><title>基于月光博客新建的示例文件目录</title><link>https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</link><description># 文件夹示例
+大致可以分为以下几类：
+- 00InBox（下载目录 所有新的内容）
+- 01MyDoc（待归纳的 或者不知道放哪里的）
+- 02Archive（按照项目分 ）
+- 03Resource（网上下载内容）
+	- 安装包
+- 04Devlop （开发目录）
+	- Project (项目目录)
+	- Repository （Maven 仓库）
+- Software  （软件安装目录）
+# 流程
+文件夹示例与子弹笔记配合使用；
+- 每次接到任务，在每日子弹笔记进行记录；如果有相关资料，就在00InBox文件夹建立对应任务文件夹，文件的命名规范直接按照项目或需求名称命名_日期等；
+- 任务完成后 转移01MyDoc （笔记软件+文件夹）
+- 有时间归纳就归纳到 02Archive
+	- 归纳可以按照项目分类；类别分类；
+	- 目录分类建议采取麦肯锡提出的MECE原则；意思 “相互独立，完全穷尽”
+
+# 文件命名规范
+项目_标签_详细文档标题_版本_日期等，方便检索
+
+参考链接：[[基于文件和文档的知识管理技巧](https://www.williamlong.info/archives/6176.html)](https://www.williamlong.info/archives/6176.html)
+。</description><guid isPermaLink="true">https://vap8023.github.io/post/ji-yu-yue-guang-bo-ke-xin-jian-de-shi-li-wen-jian-mu-lu.html</guid><pubDate>Sat, 07 Mar 2026 01:00:11 +0000</pubDate></item><item><title>青龙面板搭建教程合集</title><link>https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</link><description># 介绍
+&gt; 支持 Python3、JavaScript、Shell、Typescript 的定时任务管理平台
+[[GitHub地址](https://github.com/whyour/qinglong)](https://github.com/whyour/qinglong)
+# 安装青龙面板
+比较稳定的版本：2.11.3
+``` shell
+docker run -dit  -v $PWD/ql/data:/ql/data  -p 5700:5700  -e QlBaseUrl='/'  -e QlPort='5700'  --name qinglong  --hostname qinglong  --restart unless-stopped  yanyu.icu/whyour/qinglong:2.11.3
+```
+
+# 按照依赖：
+```shell
+docker exec -it qinglong bash -c '$(curl -fsSL https://git.metauniverse-cn.com/https://raw.githubusercontent.com/yanyuwangluo/VIP/main/Scripts/sh/ql-npm.sh)'
+```
+
+# 拉库脚本：
+仅供参考(非推荐)：
+```shell
+ql repo https://git.metauniverse-cn.com/https://github.com/shufflewzc/faker4.git 'jd_|jx_|gua_|jddj_|jdCookie' 'activity|backUp' '^jd[^_]|USER|function|utils|sendNotify|ZooFaker_Necklace.js|JDJRValidator_|sign_graphics_validate|ql|JDSignValidator|magic|depend|h5sts' 'main'
+```。</description><guid isPermaLink="true">https://vap8023.github.io/post/qing-long-mian-ban-da-jian-jiao-cheng-he-ji.html</guid><pubDate>Sat, 07 Mar 2026 00:58:11 +0000</pubDate></item><item><title>Obsidian个人使用备忘录</title><link>https://vap8023.github.io/post/Obsidian-ge-ren-shi-yong-bei-wang-lu.html</link><description># 目录结构
+目录结构也是按照 月光博客示例文件目录 概念建立；
+- 00.Inbox
+- 01.MyDoc
+- 02.Archive
+- 03.Resource
+	- 模板
+	- IMG（所有图片）
+
+设置&gt;文件与链接&gt;附件文件夹路径
+
+&lt;img width='2052' height='1403' alt='Image' src='https://github.com/user-attachments/assets/c158561e-6de5-4f47-9b06-8877b0f541dd' /&gt;
+
+设置&gt;模板&gt;模板文件夹位置
+后面新建笔记 快捷键：Ctrl+P &gt; 插入模板 &gt; 选择具体模板
+
+&lt;img width='2061' height='1292' alt='Image' src='https://github.com/user-attachments/assets/77acde6e-e73f-420a-8f17-689445e7754e' /&gt;
+
+# 插件推荐
+- Copy Image 仅了复制笔记中图片贴到其他地方
+。</description><guid isPermaLink="true">https://vap8023.github.io/post/Obsidian-ge-ren-shi-yong-bei-wang-lu.html</guid><pubDate>Tue, 03 Mar 2026 09:19:22 +0000</pubDate></item><item><title>Claude code新手入门</title><link>https://vap8023.github.io/post/Claude%20code-xin-shou-ru-men.html</link><description>## 安装
+Claude Code是一个智能编码工具，可以在终端运行，通过自然语言交互，完成代码编写、调试等工作。</description><guid isPermaLink="true">https://vap8023.github.io/post/Claude%20code-xin-shou-ru-men.html</guid><pubDate>Sun, 08 Feb 2026 12:11:18 +0000</pubDate></item><item><title>dpdns.org域名免费续费</title><link>https://vap8023.github.io/post/dpdns.org-yu-ming-mian-fei-xu-fei.html</link><description>免费域名，180天免费续费延长；
+地址：https://dash.domain.digitalplat.org/panel/main
+
+&lt;img width='2075' height='1020' alt='Image' src='https://github.com/user-attachments/assets/18d61d24-6410-433e-ad3b-bb60ab1b471a' /&gt;。</description><guid isPermaLink="true">https://vap8023.github.io/post/dpdns.org-yu-ming-mian-fei-xu-fei.html</guid><pubDate>Wed, 14 Jan 2026 14:31:48 +0000</pubDate></item><item><title>告别爱优腾 用emby追剧真爽</title><link>https://vap8023.github.io/post/gao-bie-ai-you-teng-%20-yong-emby-zhui-ju-zhen-shuang.html</link><description># 痛处
+以前追剧都是优酷、爱奇艺、腾讯视频；还需要借来借去的；很是麻烦；
+如果仅仅是集齐三家会员，你就能舒服看的话；
+各家还退出提前看、单集等额外收费点；
+总之一句话；
+**非常糟心**；
+
+# 接触emby后
+一个播放器软件；
+- 最近热播剧、新剧都可以看；
+- 国外剧、电影；
+- Netflix、apple tv、hbo
+- 听歌、有声读物等；
+
+# 什么是emby
+&gt; Emby是一款媒体库管理软件;
+&gt; 整理影视文件、有影视简介、演员信息、海报墙
+
+有一群人提供emby服务
+
+# 我的使用
+使用简单：选择一款播放器，填写emby服务地址、账号信息登录即可观看；
+服务能够直连还是需要梯子；看提供服务方的要求；
+软件选择：
+- IOS:  SenPlayer
+- 安卓: AfuseKt
+- 安卓TV:  小秘emby tv
+emby服务选择：
+目前按照公益服（字面意思，不收取费用、用爱发电）为主、可以在tg蹲个；
+目前体验了几家付费服、播放流畅度、资源方面都挺好；
+后续考虑入手一家；
+emby和机场类似，月付或靠谱的年付，不必重大投入；。</description><guid isPermaLink="true">https://vap8023.github.io/post/gao-bie-ai-you-teng-%20-yong-emby-zhui-ju-zhen-shuang.html</guid><pubDate>Thu, 01 May 2025 15:53:33 +0000</pubDate></item><item><title>Docker-compose安装 解决网速慢的问题</title><link>https://vap8023.github.io/post/Docker-compose-an-zhuang-%20-jie-jue-wang-su-man-de-wen-ti.html</link><description>## Docker-compose&#13;
+作用：&#13;
+- 互访问题&#13;
+- 顺序依赖&#13;
+&#13;
+## 安装&#13;
+国外镜像地址：&#13;
+```shell&#13;
+sudo curl -L 'https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose&#13;
+```&#13;
+&#13;
+国内镜像地址：&#13;
+```shell&#13;
+sudo curl -L https://get.daocloud.io/docker/compose/releases/download/1.24.0/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose&#13;
+```&#13;
+&#13;
+赋予执行权限：&#13;
+```shell&#13;
+sudo chmod +x /usr/local/bin/docker-compose&#13;
+```&#13;
+&#13;
+检查安装：&#13;
+```shell&#13;
+docker-compose -version&#13;
+```&#13;
+如果能够出现版本信息，说明安装没有问题；。</description><guid isPermaLink="true">https://vap8023.github.io/post/Docker-compose-an-zhuang-%20-jie-jue-wang-su-man-de-wen-ti.html</guid><pubDate>Tue, 24 Dec 2024 15:05:44 +0000</pubDate></item><item><title>Sublime text一些好用的插件 方便提升工作效率</title><link>https://vap8023.github.io/post/Sublime%20text-yi-xie-hao-yong-de-cha-jian-%20-fang-bian-ti-sheng-gong-zuo-xiao-lv.html</link><description>## Package Control&#13;
+首先需要安装Package Control；&#13;
+`Tool`安装Package Control;&#13;
+安装好之后，就可以通过Package Control，安装其他插件。</description><guid isPermaLink="true">https://vap8023.github.io/post/Sublime%20text-yi-xie-hao-yong-de-cha-jian-%20-fang-bian-ti-sheng-gong-zuo-xiao-lv.html</guid><pubDate>Tue, 24 Dec 2024 15:04:37 +0000</pubDate></item><item><title>Windows新系统常用配置</title><link>https://vap8023.github.io/post/Windows-xin-xi-tong-chang-yong-pei-zhi.html</link><description>## 新机配置&#13;
+&#13;
+对于新的Windows系统，以下几个设置需要进行调整：&#13;
+1. 防火墙关闭&#13;
+2. 杀毒软件配置&#13;
+3. 电源选项配置&#13;
+&#13;
+## 杀毒软件配置&#13;
+首先需要了解自己安装的系统版本，通过按下`Windows+R`组合键调出运行窗口，输入`winver`；即可查看具体版本；&#13;
+家庭版和专业版的操作是不一样的；&#13;
+![image-20210401204011466](https://cdn.jsdelivr.net/gh/FAQUS/CDN//img/image-20210401204011466.png)&#13;
+&#13;
+#### 专业版&#13;
+如果是专业版，&#13;
+1. 运行**Windows+R**，输入`gpedit.msc`回车，&#13;
+2. 打开策略组，在策略组定位到在策略组定位到'**计算机配置** &gt;**管理模板** &gt;**Windows组件** &gt;**Windows Defender防病毒程序**'，如下图；&#13;
+3. 启用 **关闭Windows Defender 防病毒程序**&#13;
+![](https://cdn.jsdelivr.net/gh/FAQUS/CDN//img/image-20210401204249737.png)&#13;
+&#13;
+&#13;
+#### 家庭版&#13;
+1. `Windows+R`打开运行，输入`“regedit”`回车，打开注册表;&#13;
+2. 在注册表定位到**HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender**&#13;
+3. 在右侧将DisableAntiSpyware项的数值改为1&#13;
+&#13;
+关于没有该值修改，可以通过以下两种方式：&#13;
+方法一：复制：`reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender' /v 'DisableAntiSpyware' /d 1 /t REG_DWORD /f`命令，在管理员命令提示符窗口中右键点击空白处；&#13;
+方法二：在注册表编辑器中新建DisableAntiSpyware的DWORD（32位）值 ，可以彻底禁用Windows10系统的Windows Defender。</description><guid isPermaLink="true">https://vap8023.github.io/post/Windows-xin-xi-tong-chang-yong-pei-zhi.html</guid><pubDate>Tue, 24 Dec 2024 15:02:46 +0000</pubDate></item><item><title>Netflix从业者自述</title><link>https://vap8023.github.io/post/Netflix-cong-ye-zhe-zi-shu.html</link><description># 个人经历&#13;
+## 接触Netflix&#13;
+&gt; 我是在2019年3月份接触到Netflix，当时是为了找一部剧的资源，看到Netflix平台有资源；之后又google到Netflix账号可以白嫖，白嫖的方式就是通过不断尝试BIN码试出来Netflix试用账号；这也引出来Netflix第一个阶段吧！&#13;
+&#13;
+# 中国人的Netflix&#13;
+## BIN&#13;
+用BIN开Netflix应该算第一批Netflix从业者的方式吧。</description><guid isPermaLink="true">https://vap8023.github.io/post/Netflix-cong-ye-zhe-zi-shu.html</guid><pubDate>Tue, 24 Dec 2024 14:58:43 +0000</pubDate></item><item><title>利用Charles抓取ios旧版App</title><link>https://vap8023.github.io/post/li-yong-Charles-zhua-qu-ios-jiu-ban-App.html</link><description># 准备软件&#13;
+- Charles&#13;
+- iTunes 12.6.3&#13;
+# Charles安装证书&#13;
+下载好Charles安装好之后，需要安装一个SSL证书。</description><guid isPermaLink="true">https://vap8023.github.io/post/li-yong-Charles-zhua-qu-ios-jiu-ban-App.html</guid><pubDate>Sun, 22 Dec 2024 14:54:42 +0000</pubDate></item><item><title>CentOS安装Docker</title><link>https://vap8023.github.io/post/CentOS-an-zhuang-Docker.html</link><description># 安装依赖&#13;
+```shell&#13;
+yum install - y yum-utils device-mapper-persistent-data lvm2&#13;
+```&#13;
+&#13;
+# 配置yum源&#13;
+```shell&#13;
+yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo&#13;
+```&#13;
+&#13;
+# 更新缓存&#13;
+```shell&#13;
+yum makecache fast&#13;
+&#13;
+yum install docker-ce&#13;
+```&#13;
+&#13;
+# 启动docker&#13;
+```shell&#13;
+systemctl enable docker&#13;
+systemctl start docker&#13;
+```&#13;
+&#13;
+# 镜像加速&#13;
+```shell&#13;
+vi /etc/docker/daemon.json&#13;
+# docker-cn&#13;
+{&#13;
+  'registry-mirrors': ['https://registry.docker-cn.com']&#13;
+}&#13;
+# 腾讯&#13;
+{&#13;
+  'registry-mirrors': ['https://mirror.ccs.tencentyun.com']&#13;
+}&#13;
+```。</description><guid isPermaLink="true">https://vap8023.github.io/post/CentOS-an-zhuang-Docker.html</guid><pubDate>Sat, 21 Dec 2024 13:20:15 +0000</pubDate></item><item><title>关于我</title><link>https://vap8023.github.io/about.html</link><description>本人生性懒散，本职工作Java程序员，平时喜欢研究新鲜事物（和技术无关），用我老婆的话说研究这些有的没得，有什么用。</description><guid isPermaLink="true">https://vap8023.github.io/about.html</guid><pubDate>Sat, 23 Nov 2024 11:05:47 +0000</pubDate></item></channel></rss>
