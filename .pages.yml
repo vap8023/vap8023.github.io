@@ -37,4 +37,4 @@ content:
         list: true
       - name: body
         label: 正文内容
-        type: rich-text
+        type: markdown
