@@ -38,10 +38,13 @@ pygmentsUseClasses = true
   ShowLastMod = true
   ShowShareButtons = false
   comments = false               # 需要评论系统时再开
+  # 首页只展示文章列表：置 true 后所有卡片统一为 post-entry（首篇不再放大突出）
+  disableSpecial1stPost = true
 
-  [params.homeInfoParams]
-    Title = 'LeLe Blog'
-    Content = '卷不过，只能靠歪门邪道了。'
+  # 注：原先这里的 [params.homeInfoParams]（首页信息块卡片）已移除 ——
+  # 它的内容与导航里的「关于」重复，首页直接从文章列表开始。
+  # 如需恢复，补回 Title / Content 即可；模板 layouts/_partials/home_info.html
+  # 仍保留着，会自动接上 content/about.md 的内容。
 
   [params.fuseOpts]
     isCaseSensitive = false
