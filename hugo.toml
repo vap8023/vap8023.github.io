@@ -1,0 +1,70 @@
+# 站点地址：部署仓库确定后改为最终域名
+baseURL = 'https://vap8023.github.io/'
+title = 'LeLe Blog'
+# PaperMod 主题内置搜索等使用 JSON 输出
+locale = 'zh-cn'
+theme = ['PaperMod']
+
+enableRobotsTXT = true
+enableEmoji = true
+pygmentsUseClasses = true
+# 搜索依赖 JSON 输出
+[outputs]
+  home = ['HTML', 'RSS', 'JSON']
+
+[params]
+  env = 'production'
+  title = 'LeLe Blog'
+  description = '卷不过，只能靠歪门邪道了。'
+  keywords = ['Blog', 'Golang', 'Java', 'Vue', 'TypeScript']
+  author = 'weng'
+
+  defaultTheme = 'auto'          # light / dark / auto
+  DateFormat = '2006-01-02'
+  disableScrollToTop = false
+  ShowReadingTime = true
+  ShowWordCount = true
+  ShowToc = true
+  TocOpen = false
+  ShowBreadCrumbs = true
+  ShowPostNavLinks = true
+  ShowCodeCopyButtons = true
+  ShowLastMod = true
+  ShowShareButtons = false
+  comments = false               # 需要评论系统时再开
+
+  [params.homeInfoParams]
+    Title = 'LeLe Blog'
+    Content = '卷不过，只能靠歪门邪道了。'
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+
+[taxonomies]
+  category = 'categories'
+  tag = 'tags'
+
+[[menu.main]]
+    identifier = 'home'
+    name = '首页'
+    url = '/'
+    weight = 1
+  [[menu.main]]
+    identifier = 'archives'
+    name = '归档'
+    url = '/archives/'
+    weight = 2
+  [[menu.main]]
+    identifier = 'tags'
+    name = '标签'
+    url = '/tags/'
+    weight = 3
+  [[menu.main]]
+    identifier = 'search'
+    name = '搜索'
+    url = '/search/'
+    weight = 4
