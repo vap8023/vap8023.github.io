@@ -12,6 +12,12 @@ pygmentsUseClasses = true
 [outputs]
   home = ['HTML', 'RSS', 'JSON']
 
+# 渲染文章中的原生 HTML（旧文章里的 <img> 等标签）
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
 [params]
   env = 'production'
   title = 'LeLe Blog'
