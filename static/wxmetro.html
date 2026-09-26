@@ -1,0 +1,1293 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>无锡地铁 · 站名卡片生成器</title>
+<style>
+  :root{
+    --orange:#f7a21b;
+    --ink:#1f2328;
+    --ink-2:#5b636c;
+    --ink-3:#8b939c;
+    --line:#e8eaee;
+    --bg:#f5f6f8;
+    --panel:#ffffff;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Source Han Sans SC","Noto Sans CJK SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:22px 22px 60px;
+  }
+  h1,h2,h3{margin:0;}
+
+  /* ---------- 顶部 ---------- */
+  .top{max-width:1440px;margin:0 auto 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand .mark{width:52px;height:52px;border-radius:15px;flex:0 0 auto;background:#fff;
+    display:grid;place-items:center;box-shadow:0 6px 14px rgba(20,26,35,.12);}
+  .brand .mark img{width:40px;height:40px;display:block;}
+  .brand h1{font-size:20px;letter-spacing:.5px;}
+  .brand p{margin:4px 0 0;font-size:13px;color:var(--ink-3);}
+  .top-actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;}
+
+  /* ---------- 通用控件 ---------- */
+  button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);
+    border-radius:10px;padding:9px 14px;transition:.16s ease;font-size:13.5px;}
+  button:hover{border-color:#d5d9e0;background:#fafbfc;}
+  button.primary{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:600;}
+  button.primary:hover{background:#ef9710;border-color:#ef9710;}
+  button.ghost{background:transparent;}
+  input[type=text],input[type=search],select{font:inherit;font-size:13.5px;padding:9px 11px;border-radius:10px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);width:100%;}
+  input:focus,select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(247,162,27,.14);}
+  label.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;}
+  input[type=range]{width:100%;accent-color:var(--orange);}
+  input[type=radio],input[type=checkbox]{accent-color:var(--orange);}
+
+  /* ---------- 主体布局 ---------- */
+  .wrap{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:352px minmax(0,1fr);gap:18px;align-items:start;}
+  @media (max-width:1000px){ .wrap{grid-template-columns:1fr;} }
+
+  .panel{background:var(--panel);border-radius:var(--radius);
+    box-shadow:0 1px 3px rgba(20,26,35,.06),0 8px 30px rgba(20,26,35,.04);
+    padding:16px;position:sticky;top:18px;}
+  @media (max-width:1000px){ .panel{position:static;} }
+  .sec{padding:14px 0;border-top:1px dashed var(--line);}
+  .sec:first-child{padding-top:0;border-top:0;}
+  .sec:last-child{padding-bottom:0;}
+  .sec h3{font-size:12.5px;color:var(--ink-3);font-weight:600;letter-spacing:1.2px;
+    text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .sec h3 .tip{margin-left:auto;font-size:11px;letter-spacing:0;text-transform:none;color:#b6bcc4;font-weight:400;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+  .chip{border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;border:1.5px solid var(--line);
+    background:#fff;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;}
+  .chip i{width:9px;height:9px;border-radius:50%;display:block;}
+  .chip.on{color:#fff;border-color:transparent;}
+
+  .station-list{margin-top:10px;max-height:322px;overflow:auto;border:1px solid var(--line);border-radius:11px;background:#fcfcfd;}
+  .station{display:flex;align-items:center;gap:10px;padding:9px 11px;cursor:pointer;border-bottom:1px solid #f1f3f6;}
+  .station:last-child{border-bottom:0;}
+  .station:hover{background:#fff;box-shadow:inset 3px 0 0 var(--orange);}
+  .station.sel{background:#fff8ec;}
+  .station .nm{font-size:14px;font-weight:600;}
+  .station .py{font-size:11px;color:#a3abb4;letter-spacing:.3px;margin-top:2px;}
+  .station .badges{margin-left:auto;display:flex;gap:4px;flex:0 0 auto;}
+  .mini-badge{font-size:10px;font-weight:700;color:#fff;border-radius:5px;padding:2px 5px;letter-spacing:.3px;white-space:nowrap;}
+  .empty-tip{padding:18px 12px;text-align:center;color:#b6bcc4;font-size:12.5px;line-height:1.7;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .form-row{margin-bottom:8px;}
+  .form-row span{display:block;font-size:11.5px;color:#a3abb4;margin-bottom:4px;}
+
+  .swatches{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .sw{width:28px;height:28px;border-radius:8px;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);}
+  .sw.on{box-shadow:0 0 0 2px var(--ink);}
+  input[type=color]{width:38px;height:28px;padding:0;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;}
+  .range-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+  .range-row .val{font-size:12px;color:var(--ink-3);width:38px;text-align:right;font-variant-numeric:tabular-nums;}
+  .dim{opacity:.42;pointer-events:none;}
+
+  /* ---------- 舞台 ---------- */
+  .stage{background:var(--panel);border-radius:var(--radius);
+    box-shadow:0 1px 3px rgba(20,26,35,.06),0 8px 30px rgba(20,26,35,.04);padding:16px;min-height:520px;}
+  .stage-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .stage-bar .count{font-size:13.5px;color:var(--ink-2);}
+  .stage-bar .count b{color:var(--ink);font-size:15px;}
+  .stage-bar .spacer{margin-left:auto;}
+  .view-toggle{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .view-toggle button{border:0;border-radius:0;padding:8px 13px;background:#fff;}
+  .view-toggle button.on{background:#fff8ec;color:#b96f00;font-weight:600;}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;}
+  .card-item{position:relative;border-radius:18px;transition:.18s ease;}
+  .card-item svg{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 16px rgba(20,26,35,.10));}
+  .card-item:hover{transform:translateY(-2px);}
+  .card-hover{position:absolute;top:10px;right:10px;display:flex;gap:6px;opacity:0;transition:.16s ease;}
+  .card-item:hover .card-hover{opacity:1;}
+  .card-hover button{padding:6px 10px;font-size:12px;border-radius:8px;background:rgba(255,255,255,.94);backdrop-filter:blur(4px);}
+
+  .scatter{border-radius:16px;padding:26px 20px 40px;
+    background:radial-gradient(120% 90% at 18% 8%,#f7efe2 0%,#eadfcb 46%,#ddcfb6 100%);
+    min-height:560px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:6px 4px;align-items:center;justify-items:center;overflow:hidden;}
+  .scatter .sc-item{width:212px;transition:.22s ease;cursor:pointer;}
+  .scatter .sc-item svg{width:100%;height:auto;display:block;filter:drop-shadow(0 3px 7px rgba(90,70,40,.22));}
+  .scatter .sc-item:hover{transform:scale(1.06) rotate(0deg) !important;z-index:99;}
+  .stage.alt{background:transparent;box-shadow:none;padding:0;}
+
+  .zero{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:460px;
+    color:#b6bcc4;text-align:center;gap:8px;font-size:13.5px;line-height:1.9;}
+  .zero .big{font-size:40px;}
+
+  /* ---------- 弹窗 ---------- */
+  .modal{position:fixed;inset:0;background:rgba(24,28,34,.55);backdrop-filter:blur(3px);display:none;
+    align-items:center;justify-content:center;padding:24px;z-index:50;}
+  .modal.on{display:flex;}
+  .modal-inner{background:#fff;border-radius:18px;padding:18px;max-width:760px;width:100%;max-height:92vh;overflow:auto;}
+  .modal-inner h3{font-size:15px;margin-bottom:12px;}
+  .modal-inner > div > svg{width:100%;height:auto;display:block;border-radius:14px;}
+  .modal-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .modal-actions .spacer{margin-left:auto;}
+
+  .toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);background:rgba(28,32,38,.92);
+    color:#fff;font-size:13px;padding:10px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s ease;z-index:99;}
+  .toast.on{opacity:1;transform:translate(-50%,0);}
+
+  .foot{max-width:1440px;margin:22px auto 0;font-size:12px;color:#b0b7bf;line-height:1.9;}
+
+  /* ---------- 打印排版（按 mm 实尺寸） ---------- */
+  .hintline{margin:10px 0 0;font-size:11.5px;line-height:1.75;color:#98a1aa;}
+  #pagesView{position:relative;}
+  #pagesScaler{transform-origin:top left;}
+  .pages-wrap{display:block;}
+  .sheet{
+    position:relative;background:#fff;box-sizing:border-box;overflow:hidden;
+    box-shadow:0 6px 22px rgba(20,26,35,.14);margin:0 0 18px;
+  }
+  .sheet-grid{display:grid;align-content:start;justify-content:start;box-sizing:border-box;}
+  .slot{position:relative;box-sizing:border-box;}
+  .slot svg{width:100%;height:100%;display:block;}
+  .slot.cut{outline:0.25mm dashed #ccd3da;}
+  .sheet-tag{
+    position:absolute;right:6mm;bottom:3mm;font-size:8pt;color:#dfe3e8;letter-spacing:.5px;
+  }
+
+  @media print{
+    @page{margin:0;}
+    html,body{background:#fff !important;padding:0 !important;margin:0 !important;}
+    .top,.panel,.stage-bar,.foot,.modal,.toast,.card-hover{display:none !important;}
+    .stage{box-shadow:none !important;padding:0 !important;background:#fff !important;border-radius:0 !important;min-height:0 !important;}
+    #board{display:none !important;}
+    #pagesView{display:block !important;height:auto !important;}
+    #pagesScaler{transform:none !important;}
+    .sheet{box-shadow:none !important;margin:0 !important;break-after:page;page-break-after:always;}
+    .sheet:last-child{break-after:auto;page-break-after:auto;}
+    .slot.cut{outline-color:#e6eaee;}
+    .sheet-tag{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="mark"><img id="brandLogo" alt="无锡地铁标识"></div>
+    <div>
+      <h1>无锡地铁 · 站名卡片生成器</h1>
+      <p>线路配色描边 · 官方标识 · 始发终点 · 一键导出 PDF（按实尺寸排版，一页放满）</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button id="btnRandom" class="ghost">随机来几张</button>
+    <button id="btnClear" class="ghost">清空</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- ============ 左侧面板 ============ -->
+  <aside class="panel">
+    <div class="sec">
+      <h3>选站点<span class="tip">90 站 · 5 条线</span></h3>
+      <input type="search" id="q" placeholder="搜索站名 / 英文，如 三阳广场">
+      <div class="chips" id="chips"></div>
+      <div class="station-list" id="list"></div>
+    </div>
+
+    <div class="sec">
+      <h3>自定义站点</h3>
+      <div class="form-row"><span>站点名（中文）</span><input type="text" id="cZh" placeholder="如：无锡火车站"></div>
+      <div class="form-row"><span>英文名</span><input type="text" id="cEn" placeholder="Wuxi Railway Station"></div>
+      <div class="form-row"><span>始发站 ⇄ 终点站</span><input type="text" id="cTerm" placeholder="堰桥 ⇄ 南方泉"></div>
+      <div class="form-row"><span>线路（可多选）</span><div class="chips" id="cLines"></div></div>
+      <div class="form-row"><span>额外线路（如 5号线,#00843D,起点,终点，多个用 ; 分隔）</span>
+        <input type="text" id="cExtra" placeholder="5号线,#00843D,渔父岛,鼋头渚">
+      </div>
+      <button class="primary" id="btnAddCustom" style="width:100%">生成这张卡片</button>
+    </div>
+
+    <div class="sec">
+      <h3>卡片样式</h3>
+      <div class="chips" style="margin-top:0">
+        <label class="chk"><input type="radio" name="bmode" value="line" id="bmodeLine" checked>描边跟随线路色</label>
+        <label class="chk"><input type="radio" name="bmode" value="custom" id="bmodeCustom">自定义颜色</label>
+      </div>
+      <div id="customColorBox" class="dim" style="margin-top:10px">
+        <div class="swatches">
+          <div class="sw" data-c="#f7a21b" style="background:#f7a21b"></div>
+          <div class="sw" data-c="#0b5fa5" style="background:#0b5fa5"></div>
+          <div class="sw" data-c="#00a651" style="background:#00a651"></div>
+          <div class="sw" data-c="#d7192d" style="background:#d7192d"></div>
+          <div class="sw" data-c="#7e3f98" style="background:#7e3f98"></div>
+          <div class="sw" data-c="#3b4148" style="background:#3b4148"></div>
+          <input type="color" id="borderColor" value="#f7a21b">
+        </div>
+      </div>
+      <label class="chk" style="margin-top:10px"><input type="checkbox" id="optGrad" checked>换乘站描边用双色渐变</label>
+      <div class="range-row"><span style="font-size:12.5px;color:#5b636c">描边粗细</span>
+        <input type="range" id="borderW" min="6" max="26" step="1" value="15"><span class="val" id="borderWv">15</span>
+      </div>
+      <div class="range-row"><span style="font-size:12.5px;color:#5b636c">圆角</span>
+        <input type="range" id="radius" min="0" max="56" step="1" value="28"><span class="val" id="radiusv">28</span>
+      </div>
+      <div class="chips" style="margin-top:12px">
+        <label class="chk"><input type="checkbox" id="optLogo" checked>标识</label>
+        <label class="chk"><input type="checkbox" id="optBadge" checked>线路徽章</label>
+        <label class="chk"><input type="checkbox" id="optEn" checked>英文站名</label>
+        <label class="chk"><input type="checkbox" id="optFoot" checked>始发/终点</label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>批量</h3>
+      <div class="form-row"><span>把整条线路的站点加进来</span>
+        <select id="selLine"><option value="">选择线路…</option></select>
+      </div>
+      <button id="btnAddLine" style="width:100%">加入该线路全部站点</button>
+    </div>
+
+    <div class="sec">
+      <h3>导出 PDF<span class="tip" id="pdfInfo">—</span></h3>
+      <div class="grid2">
+        <div class="form-row"><span>纸张</span>
+          <select id="pPaper"><option value="A4">A4（210×297）</option><option value="A3">A3（297×420）</option></select>
+        </div>
+        <div class="form-row"><span>方向</span>
+          <select id="pOrient"><option value="portrait">纵向</option><option value="landscape">横向</option></select>
+        </div>
+      </div>
+      <div class="form-row"><span>卡片尺寸（宽度）</span>
+        <select id="pSize">
+          <option value="126">大卡 126mm — 每页 3 张（认字够大）</option>
+          <option value="95" selected>中卡 95mm — 每页 8 张（推荐）</option>
+          <option value="85">小卡 85mm — 每页 10 张</option>
+          <option value="63">迷你 63mm — 每页 21 张（贴墙）</option>
+          <option value="custom">自定义宽度…</option>
+        </select>
+      </div>
+      <div class="form-row" id="pCustomRow" style="display:none"><span>自定义宽度（mm）</span>
+        <input type="text" id="pCustom" value="95">
+      </div>
+      <div class="range-row"><span style="font-size:12.5px;color:#5b636c">卡片间距</span>
+        <input type="range" id="pGap" min="0" max="8" step="0.5" value="2"><span class="val" id="pGapv">2</span>
+      </div>
+      <div class="range-row"><span style="font-size:12.5px;color:#5b636c">页边距</span>
+        <input type="range" id="pMargin" min="3" max="16" step="1" value="8"><span class="val" id="pMarginv">8</span>
+      </div>
+      <div class="range-row"><span style="font-size:12.5px;color:#5b636c">站名字号</span>
+        <input type="range" id="zhScale" min="100" max="150" step="5" value="100"><span class="val" id="zhScalev">100</span>
+      </div>
+      <label class="chk" style="margin-top:8px"><input type="checkbox" id="pCut" checked>显示裁切线</label>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="primary" id="btnPdf" style="flex:1">导出 PDF 文件</button>
+        <button id="btnPrint">打印</button>
+      </div>
+      <p class="hintline" id="pdfHint">—</p>
+    </div>
+  </aside>
+
+  <!-- ============ 右侧舞台 ============ -->
+  <section class="stage" id="stage">
+    <div class="stage-bar">
+      <div class="count">已选 <b id="nSel">0</b> 张卡片<span id="pageCount" style="color:#98a1aa"></span></div>
+      <div class="spacer"></div>
+      <div class="view-toggle">
+        <button id="viewGrid" class="on">网格</button>
+        <button id="viewScatter">散落</button>
+        <button id="viewPages">排版预览</button>
+      </div>
+      <button id="btnDownAll">下载全部 PNG</button>
+      <button class="primary" id="btnPdfTop">导出 PDF</button>
+    </div>
+    <div id="board"></div>
+    <div id="pagesView" style="display:none"><div id="pagesScaler"></div></div>
+  </section>
+</div>
+
+<p class="foot">
+  数据来源：无锡地铁公开运营信息（1 号线 27 站 / 2 号线 21 站 / 3 号线 21 站 / 4 号线 18 站 / S1 线 10 站，换乘站合并计 90 站）。<br>
+  线路标识色与始发/终点：1 号线 红 · 堰桥 ⇄ 南方泉；2 号线 绿 · 梅园开原寺 ⇄ 无锡东站；3 号线 蓝 · 苏庙 ⇄ 硕放机场；4 号线 紫 · 刘潭 ⇄ 博览中心；S1 线 · 江阴外滩 ⇄ 堰桥。<br>
+  页面左上、卡片左侧使用的是无锡地铁官方标识（取自官网 wxmetro.net），仅作站名卡片示意用途。<br>
+  导出：PNG 为 2 倍图（1280×800）；PDF 按纸张实际毫米尺寸排版（A4/A3、纵/横、卡片宽度可调），每页自动放满，默认 A4 纵向 95mm 卡 = 8 张/页，300dpi。全部离线生成，不依赖任何外部库或联网。
+</p>
+
+<div class="modal" id="modal">
+  <div class="modal-inner">
+    <h3 id="modalTitle">卡片预览</h3>
+    <div id="modalCard"></div>
+    <div class="modal-actions">
+      <button class="primary" id="modalDown">下载 PNG</button>
+      <button id="modalCopy">复制图片</button>
+      <button id="modalSvg">下载 SVG</button>
+      <div class="spacer"></div>
+      <button class="ghost" id="modalClose">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* 无锡地铁官方标识（官网 wxmetro.net/logo.png，内嵌 base64，离线可用） */
+const WX_LOGO = "data:image/png;base64,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";
+</script>
+
+<script>
+/* ==========================================================
+   1. 数据
+   ========================================================== */
+const LINE_META = {
+  "1号线":{ color:"#d7192d", from:"堰桥",       to:"南方泉" },
+  "2号线":{ color:"#00a651", from:"梅园开原寺", to:"无锡东站" },
+  "3号线":{ color:"#0b6bb2", from:"苏庙",       to:"硕放机场" },
+  "4号线":{ color:"#7e3f98", from:"刘潭",       to:"博览中心" },
+  "S1线": { color:"#e60012", from:"江阴外滩",   to:"堰桥" }
+};
+
+function lineBadge(id){
+  const s = String(id);
+  /* 容错：传入 "1号线"/"S1线" 也直接用，不重复拼后缀 */
+  const t = (s === "S1") ? "S1线" : (/^\d+号线$|^S1线$/.test(s) ? s : s + "号线");
+  const m = LINE_META[t];
+  return { t:t, c: m ? m.color : "#6b7280", from: m ? m.from : "", to: m ? m.to : "" };
+}
+
+/* z=中文 e=英文 l=线路号 */
+const RAW = [
+  /* ---- 1 号线 ---- */
+  ["堰桥","Yanqiao",[1]],
+  ["锡北运河","Xibei Canal",[1]],
+  ["西漳","Xizhang",[1]],
+  ["天一","Tianyi",[1]],
+  ["刘潭","Liutan",[1,4]],
+  ["庄前","Zhuangqian",[1]],
+  ["民丰","Minfeng",[1]],
+  ["无锡火车站","Wuxi Railway Station",[1,3]],
+  ["胜利门","Shenglimen",[1]],
+  ["三阳广场","Sanyang Plaza",[1,2]],
+  ["南禅寺","Nanchan Temple",[1]],
+  ["谈渡桥","Tanduqiao",[1]],
+  ["太湖广场","Taihu Square",[1]],
+  ["清名桥","Qingmingqiao",[1]],
+  ["人民医院","People's Hospital",[1]],
+  ["华清大桥","Huaqingdaqiao",[1]],
+  ["扬名","Yangming",[1]],
+  ["南湖家园","Nanhujiayuan",[1]],
+  ["塘铁桥","Tangtieqiao",[1]],
+  ["金匮公园","Jinkui Park",[1]],
+  ["市民中心","Civic Center",[1,4]],
+  ["文化宫","Cultural Palace",[1]],
+  ["江南大学","Jiangnan University",[1]],
+  ["长广溪","Changguangxi",[1]],
+  ["雪浪","Xuelang",[1]],
+  ["葛埭桥","Gedaiqiao",[1]],
+  ["南方泉","Nanfangquan",[1]],
+  /* ---- 2 号线 ---- */
+  ["梅园开原寺","Meiyuan Kaiyuan Temple",[2]],
+  ["荣巷","Rongxiang",[2]],
+  ["小桃源","Xiaotaoyuan",[2]],
+  ["河埒口","Heliekou",[2,4]],
+  ["大王基","Dawangji",[2]],
+  ["梁溪大桥","Liangxidaqiao",[2]],
+  ["五爱广场","Wuai Square",[2]],
+  ["东林广场","Donglin Plaza",[2]],
+  ["上马墩","Shangmadun",[2]],
+  ["靖海","Jinghai",[2,3]],
+  ["广益","Guangyi",[2]],
+  ["柏庄","Baizhuang",[2]],
+  ["东亭","Dongting",[2]],
+  ["庄桥","Zhuangqiao",[2]],
+  ["云林","Yunlin",[2]],
+  ["九里河公园","Jiulihe Park",[2]],
+  ["查桥","Zhaqiao",[2]],
+  ["映月湖公园","Yinyuehu Park",[2]],
+  ["迎宾广场","Yingbin Square",[2]],
+  ["无锡东站","Wuxi East Railway Station",[2]],
+  /* ---- 3 号线 ---- */
+  ["苏庙","Sumiao",[3]],
+  ["钱桥","Qianqiao",[3]],
+  ["龙山梢","Longshanshao",[3]],
+  ["石门路","Shimen Road",[3]],
+  ["盛岸","Sheng'an",[3,4]],
+  ["吴桥","Wuqiao",[3]],
+  ["北栅口","Beizhakou",[3]],
+  ["广瑞","Guangrui",[3]],
+  ["东风","Dongfeng",[3]],
+  ["叙丰","Xufeng",[3]],
+  ["太湖花园","Taihu Huayuan",[3]],
+  ["新光路","Xinguang Road",[3]],
+  ["旺庄路","Wangzhuang Road",[3]],
+  ["黄山路","Huangshan Road",[3]],
+  ["高浪东路","East Gaolang Road",[3]],
+  ["周泾巷","Zhoujingxiang",[3]],
+  ["无锡新区站","Wuxi New District Station",[3]],
+  ["长江南路","South Changjiang Road",[3]],
+  ["硕放机场","Sunan Shuofang International Airport",[3]],
+  /* ---- 4 号线 ---- */
+  ["广石路","Guangshi Road",[4]],
+  ["黄巷","Huangxiang",[4]],
+  ["惠山古镇","Huishan Ancient Town",[4]],
+  ["青山湾荣院","Qingshanwan Rongjun Hospital",[4]],
+  ["西园弄","Xiyuannong",[4]],
+  ["体育中心","Wuxi Sports Center",[4]],
+  ["夏家边","Xiajiabian",[4]],
+  ["蠡湖大桥","Lihudaqiao",[4]],
+  ["大剧院","Wuxi Grand Theater",[4]],
+  ["五湖大道","Wuhu Avenue",[4]],
+  ["周新苑","Zhouxinyuan",[4]],
+  ["吴都路","Wudu Road",[4]],
+  ["丰润道","Fengrun Road",[4]],
+  ["博览中心","Wuxi Taihu International Expo Center",[4]],
+  /* ---- S1 线 ---- */
+  ["江阴外滩","Jiangyin Bund",["S1"]],
+  ["中山公园","Zhongshan Park",["S1"]],
+  ["南门","Nanmen",["S1"]],
+  ["江阴中医院","Jiangyin TCM Hospital",["S1"]],
+  ["江阴高铁站","Jiangyin Railway Station",["S1"]],
+  ["南闸","Nanzha",["S1"]],
+  ["峭岐","Qiaoqi",["S1"]],
+  ["青阳","Qingyang",["S1"]],
+  ["霞客湾科学城","Xiakewan Science City",["S1"]],
+  ["马镇","Mazhen",["S1"]]
+];
+
+const STATIONS = RAW.map(function(r){
+  return { zh:r[0], en:r[1], lines:r[2].map(lineBadge), key:"s:" + r[0] };
+});
+
+/* ==========================================================
+   2. 状态
+   ========================================================== */
+const OPT = {
+  borderMode:"line",       /* line = 跟随线路色 / custom = 自定义 */
+  borderColor:"#f7a21b",
+  transferGradient:true,   /* 换乘站用双色渐变描边 */
+  borderW:15,
+  radius:28,
+  logo:true, badge:true, en:true, foot:true,
+  zhScale:1                /* 站名字号倍数（1 = 100%），给小孩认字可放大 */
+};
+
+/* 导出 PDF 的排版参数（单位 mm） */
+const PAPER = { A4:{ w:210, h:297 }, A3:{ w:297, h:420 } };
+const PRINT = {
+  paper:"A4",
+  orient:"portrait",   /* portrait 纵向 / landscape 横向 */
+  cardW:95,            /* 卡片物理宽度，高度按 8:5 自动算 */
+  gap:2,               /* 卡片间距 */
+  margin:8,            /* 页边距 */
+  cut:true,            /* 裁切线 */
+  dpi:300              /* 图片栅格化精度 */
+};
+const RATIO = 640 / 400;   /* 卡片宽高比（与卡片逻辑尺寸一致） */
+
+const KEY = "wuxi-metro-card-v3";
+const state = { selected:[], filterLines:[], q:"", view:"grid" };
+
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify({ opt:OPT, print:PRINT, selected:state.selected })); }catch(e){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(d.opt) Object.assign(OPT, d.opt);
+    if(d.print) Object.assign(PRINT, d.print);
+    if(Array.isArray(d.selected)) state.selected = d.selected;
+  }catch(e){}
+}
+
+/* 一页放多少张：按纸张可用区域自动排 */
+function layout(){
+  const p = PAPER[PRINT.paper] || PAPER.A4;
+  const pw = (PRINT.orient === "portrait") ? p.w : p.h;
+  const ph = (PRINT.orient === "portrait") ? p.h : p.w;
+  const usableW = pw - 2*PRINT.margin;
+  const usableH = ph - 2*PRINT.margin;
+  const cardW = Math.min(PRINT.cardW, usableW);   /* 别超出纸张可用区 */
+  const cardH = cardW / RATIO;
+  const cols = Math.max(1, Math.floor((usableW + PRINT.gap) / (cardW + PRINT.gap)));
+  const rows = Math.max(1, Math.floor((usableH + PRINT.gap) / (cardH + PRINT.gap)));
+  return { page:{ w:pw, h:ph }, cardW:cardW, cardH:cardH, cols:cols, rows:rows, per:cols*rows };
+}
+
+/* ==========================================================
+   3. 卡片绘制（纯 SVG，便于导出）
+   ========================================================== */
+const CARD_W = 640, CARD_H = 400;
+
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function norm(s){ return String(s||"").toLowerCase().replace(/[\s'’·\-]/g,""); }
+
+function zhSize(n){
+  if(n <= 2) return 106;
+  if(n === 3) return 94;
+  if(n === 4) return 78;
+  if(n === 5) return 66;
+  if(n === 6) return 56;
+  if(n === 7) return 48;
+  return 42;
+}
+function enSize(len){
+  if(len <= 12) return 27;
+  if(len <= 18) return 23;
+  if(len <= 26) return 19;
+  if(len <= 34) return 16.5;
+  return 15;
+}
+
+/* 描边色：跟随线路色（换乘站可双色渐变）或自定义 */
+function borderStroke(card, o){
+  const ls = (card.lines || []).filter(function(l){ return l && l.c; });
+  if(o.borderMode === "custom" || !ls.length){
+    return { stroke:o.borderColor, defs:"", accent:o.borderColor };
+  }
+  if(ls.length > 1 && o.transferGradient){
+    const id = "bd" + ls.map(function(l){ return String(l.c).replace("#",""); }).join("");
+    let g = '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1">';
+    ls.forEach(function(l,i){
+      g += '<stop offset="' + (i/(ls.length-1)).toFixed(3) + '" stop-color="' + l.c + '"/>';
+    });
+    g += '</linearGradient></defs>';
+    return { stroke:"url(#" + id + ")", defs:g, accent:ls[0].c };
+  }
+  return { stroke:ls[0].c, defs:"", accent:ls[0].c };
+}
+
+/* 生成一张卡片的 SVG 字符串 */
+function cardSVG(card, o){
+  const w = CARD_W, h = CARD_H;
+  const bw = o.borderW, r = o.radius;
+  const m = bw + 26;                          /* 安全边距 */
+  const lx = m;                               /* 左列 x */
+  const colCx = (m + 118 + (w - m)) / 2;      /* 站名区水平中心 */
+  const bs = borderStroke(card, o);
+
+  let s = "";
+  s += '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" font-family="PingFang SC, Microsoft YaHei, Hiragino Sans GB, Source Han Sans SC, Noto Sans CJK SC, sans-serif">';
+  s += bs.defs;
+  /* 卡面：白底 + 线路色描边 */
+  s += '<rect x="' + (bw/2) + '" y="' + (bw/2) + '" width="' + (w-bw) + '" height="' + (h-bw) + '" rx="' + r + '" fill="#ffffff" stroke="' + bs.stroke + '" stroke-width="' + bw + '"/>';
+
+  /* 左列：官方标识 + 竖排「无锡地铁」 */
+  let curY = m;
+  if(o.logo){
+    s += '<image x="' + lx + '" y="' + m + '" width="74" height="74" href="' + WX_LOGO + '" xlink:href="' + WX_LOGO + '"/>';
+    const chars = ["无","锡","地","铁"];
+    for(let i=0;i<chars.length;i++){
+      s += '<text x="' + (lx+37) + '" y="' + (m + 74 + 22 + i*17.5) + '" text-anchor="middle" font-size="14" fill="#a9b1b9" letter-spacing="1">' + chars[i] + '</text>';
+    }
+    curY = m + 74 + 22 + 4*17.5;
+  }
+
+  /* 左列：线路徽章 */
+  if(o.badge && card.lines && card.lines.length){
+    const badgeH = 30, gap = 9;
+    if(!o.logo) curY = m + 4;
+    for(let i=0;i<card.lines.length;i++){
+      const L = card.lines[i];
+      const label = L.t || "";
+      const badgeW = Math.max(72, 24 + label.length * 15.5);
+      const y = curY + 14 + i*(badgeH+gap);
+      s += '<rect x="' + lx + '" y="' + y + '" width="' + badgeW + '" height="' + badgeH + '" rx="9" fill="' + L.c + '"/>';
+      s += '<text x="' + (lx + badgeW/2) + '" y="' + (y + badgeH/2 + 5.5) + '" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff" letter-spacing="0.3">' + esc(label) + '</text>';
+    }
+  }
+
+  /* 中部：中文站名 + 英文站名（不带拼音） */
+  const zh = card.zh || "站点名";
+  const en = card.en || "";
+  /* 教字模式：字号可放大，但不能超出站名区宽度 */
+  const nameBudget = (w - m) - (m + 118) - 22;
+  const fs = Math.min(zhSize(zh.length) * (o.zhScale || 1), (nameBudget / zh.length) * 1.02, 118);
+  const lsZh = (zh.length <= 3 ? 10 : 4);
+
+  s += '<text x="' + (colCx + lsZh/2) + '" y="196" text-anchor="middle" font-size="' + fs + '" font-weight="700" fill="#1f2328" letter-spacing="' + lsZh + '">' + esc(zh) + '</text>';
+
+  if(o.en && en){
+    const es = enSize(en.length);
+    s += '<text x="' + (colCx + 1) + '" y="250" text-anchor="middle" font-size="' + es + '" fill="#5b636c" letter-spacing="2">' + esc(en) + '</text>';
+  }
+
+  /* 底栏：始发站 ⇄ 终点站 */
+  const rows = (o.foot && card.lines) ? card.lines.slice(0,2) : [];
+  if(rows.length){
+    const rowH = 26;
+    const firstY = (rows.length > 1) ? 322 : 350;
+    s += '<line x1="' + m + '" y1="' + (firstY - 26) + '" x2="' + (w - m) + '" y2="' + (firstY - 26) + '" stroke="#f0f1f4" stroke-width="1.5"/>';
+    rows.forEach(function(L, i){
+      const y = firstY + i*rowH;
+      s += '<circle cx="' + (m + 6) + '" cy="' + (y - 5) + '" r="5.5" fill="' + L.c + '"/>';
+      s += '<text x="' + (m + 22) + '" y="' + y + '" font-size="15" font-weight="700" fill="' + L.c + '">' + esc(L.t || "") + '</text>';
+      if(L.from && L.to){
+        s += '<text x="' + (m + 78) + '" y="' + y + '" font-size="16" fill="#3f4750" letter-spacing="0.5">' + esc(L.from) + '  ⇄  ' + esc(L.to) + '</text>';
+      }
+    });
+    if(rows.length > 1){
+      s += '<text x="' + (w - m) + '" y="' + firstY + '" text-anchor="end" font-size="12" fill="' + bs.accent + '" letter-spacing="1.2">换乘站 TRANSFER</text>';
+    }
+  }
+
+  s += '</svg>';
+  return s;
+}
+
+/* ==========================================================
+   4. 渲染
+   ========================================================== */
+const $ = function(id){ return document.getElementById(id); };
+
+function renderChips(){
+  const ids = ["1号线","2号线","3号线","4号线","S1线"];
+  let html = '<div class="chip" data-l="__all" style="' + (state.filterLines.length === 0 ? 'background:#1f2328;color:#fff;border-color:transparent' : '') + '">全部</div>';
+  ids.forEach(function(t){
+    const on = state.filterLines.indexOf(t) >= 0;
+    html += '<div class="chip ' + (on ? "on" : "") + '" data-l="' + t + '" style="' + (on ? "background:" + LINE_META[t].color + ";color:#fff;border-color:transparent" : "") + '">'
+         +  '<i style="background:' + LINE_META[t].color + '"></i>' + t + '</div>';
+  });
+  $("chips").innerHTML = html;
+
+  let ch = "";
+  ids.forEach(function(t){
+    ch += '<label class="chk"><input type="checkbox" class="cln" value="' + t + '">' + t + '</label>';
+  });
+  $("cLines").innerHTML = ch;
+
+  let opts = "";
+  ids.forEach(function(t){ opts += '<option value="' + t + '">' + t + '（整条加入）</option>'; });
+  $("selLine").innerHTML = '<option value="">选择线路…</option>' + opts;
+}
+
+function matchFilter(st){
+  if(state.filterLines.length){
+    const has = st.lines.some(function(L){ return state.filterLines.indexOf(L.t) >= 0; });
+    if(!has) return false;
+  }
+  const q = state.q.trim().toLowerCase();
+  if(!q) return true;
+  const hay = (st.zh + " " + st.en + " " + st.lines.map(function(L){return L.t;}).join(" ")).toLowerCase();
+  if(hay.indexOf(q) >= 0) return true;
+  return norm(hay).indexOf(norm(q)) >= 0;
+}
+
+function renderList(){
+  const arr = STATIONS.filter(matchFilter);
+  if(!arr.length){
+    $("list").innerHTML = '<div class="empty-tip">没有匹配的站点<br>换个关键词试试</div>';
+    return;
+  }
+  let html = "";
+  arr.forEach(function(st){
+    const sel = state.selected.some(function(c){ return c.key === st.key; });
+    let badges = "";
+    st.lines.forEach(function(L){
+      badges += '<span class="mini-badge" style="background:' + L.c + '">' + esc(L.t.replace("号线","").replace("线","")) + '</span>';
+    });
+    html += '<div class="station ' + (sel ? "sel" : "") + '" data-key="' + esc(st.key) + '">'
+         +    '<div><div class="nm">' + esc(st.zh) + '</div><div class="py">' + esc(st.en) + '</div></div>'
+         +    '<div class="badges">' + badges + '</div>'
+         +  '</div>';
+  });
+  $("list").innerHTML = html;
+}
+
+function emptyStage(){
+  return '<div class="zero"><div class="big">🚇</div>'
+       + '<div>左边挑几个站点，或点「随机来几张」<br>卡片会出现在这里，点一下可以放大、下载</div></div>';
+}
+
+/* ---------- 打印排版预览（按 mm 实尺寸渲染成一张张纸） ---------- */
+function renderPages(){
+  const L = layout();
+  const cards = state.selected;
+  const pages = Math.max(1, Math.ceil(cards.length / L.per));
+  const cut = PRINT.cut ? " cut" : "";
+  let html = '<div class="pages-wrap">';
+  for(let p=0;p<pages;p++){
+    html += '<div class="sheet" style="width:' + L.page.w + 'mm;height:' + L.page.h + 'mm;padding:' + PRINT.margin + 'mm">';
+    html += '<div class="sheet-grid" style="grid-template-columns:repeat(' + L.cols + ',' + L.cardW + 'mm);grid-auto-rows:' + L.cardH.toFixed(3) + 'mm;gap:' + PRINT.gap + 'mm">';
+    for(let i=p*L.per; i<Math.min((p+1)*L.per, cards.length); i++){
+      html += '<div class="slot' + cut + '" style="width:' + L.cardW + 'mm;height:' + L.cardH.toFixed(3) + 'mm">' + cardSVG(cards[i], OPT) + '</div>';
+    }
+    html += '</div><div class="sheet-tag">' + (p+1) + ' / ' + pages + '</div></div>';
+  }
+  html += '</div>';
+  $("pagesScaler").innerHTML = html;
+
+  /* 屏幕按比例缩放显示 */
+  const mmpx = 96/25.4;
+  const avail = ($("stage").clientWidth || 820) - 34;
+  const scale = Math.min(1, avail / (L.page.w * mmpx));
+  $("pagesScaler").style.transform = "scale(" + scale + ")";
+  $("pagesView").style.height = ($("pagesScaler").offsetHeight * scale) + "px";
+  $("pagesView").style.display = "block";
+  $("board").style.display = "none";
+}
+
+function switchView(v){
+  state.view = v;
+  $("viewGrid").classList.toggle("on", v === "grid");
+  $("viewScatter").classList.toggle("on", v === "scatter");
+  $("viewPages").classList.toggle("on", v === "pages");
+  renderBoard();
+}
+
+function renderBoard(){
+  const board = $("board");
+  const n = state.selected.length;
+  const L = layout();
+  $("nSel").textContent = n;
+  $("pageCount").textContent = n ? ("　·　每页 " + L.per + " 张 → 共 " + Math.ceil(n / L.per) + " 页") : "";
+
+  if(!n){
+    $("stage").classList.remove("alt");
+    board.className = "";
+    board.style.display = "";
+    $("pagesView").style.display = "none";
+    board.innerHTML = emptyStage();
+    updatePdfInfo();
+    return;
+  }
+
+  if(state.view === "pages"){ renderPages(); updatePdfInfo(); return; }
+
+  $("pagesView").style.display = "none";
+  board.style.display = "";
+  updatePdfInfo();
+
+  if(state.view === "scatter"){
+    $("stage").classList.add("alt");
+    let html = '<div class="scatter">';
+    state.selected.forEach(function(c,i){
+      const rot = ((i * 37) % 29) - 14;
+      const dy  = ((i * 53) % 17) - 8;
+      html += '<div class="sc-item" data-i="' + i + '" style="transform:rotate(' + rot + 'deg) translateY(' + dy + 'px)">' + cardSVG(c, OPT) + '</div>';
+    });
+    html += '</div>';
+    board.innerHTML = html;
+    return;
+  }
+
+  $("stage").classList.remove("alt");
+  let html = '<div class="cards">';
+  state.selected.forEach(function(c,i){
+    html += '<div class="card-item" data-i="' + i + '">'
+         +    '<div class="card-hover"><button data-act="zoom">放大</button><button data-act="del">移除</button></div>'
+         +    cardSVG(c, OPT)
+         +  '</div>';
+  });
+  html += '</div>';
+  board.innerHTML = html;
+}
+
+function renderAll(){ renderChips(); renderList(); renderBoard(); }
+
+/* ==========================================================
+   5. 选择逻辑
+   ========================================================== */
+function addStation(st){
+  if(state.selected.some(function(c){ return c.key === st.key; })) return false;
+  state.selected.push({ zh:st.zh, en:st.en, lines:st.lines.slice(), key:st.key });
+  return true;
+}
+function removeAt(i){ state.selected.splice(i,1); }
+
+/* ==========================================================
+   6. 导出
+   ========================================================== */
+function svgToCanvas(svgStr, scale, cb){
+  const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgStr);
+  const img = new Image();
+  img.onload = function(){
+    const cv = document.createElement("canvas");
+    cv.width = CARD_W * scale;
+    cv.height = CARD_H * scale;
+    const ctx = cv.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.drawImage(img, 0, 0, cv.width, cv.height);
+    cb(cv);
+  };
+  img.onerror = function(){ toast("导出失败，请换个浏览器试试"); };
+  img.src = url;
+}
+
+function slug(s){ return String(s).replace(/[\\/:*?"<>|\s]/g,"_"); }
+
+function downloadCard(card, done){
+  svgToCanvas(cardSVG(card, OPT), 2, function(cv){
+    cv.toBlob(function(blob){
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "无锡地铁_" + slug(card.zh) + ".png";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); if(done) done(); }, 400);
+    }, "image/png");
+  });
+}
+
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ t.classList.remove("on"); }, 1900);
+}
+
+/* ==========================================================
+   6b. PDF 导出（手写 PDF 1.4，卡片按 mm 实尺寸排版，图片走 JPEG/DCTDecode）
+   ========================================================== */
+const MM2PT = 72 / 25.4;
+
+function cardJpeg(card, W, H){
+  return new Promise(function(resolve, reject){
+    const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(cardSVG(card, OPT));
+    const img = new Image();
+    img.onload = function(){
+      const cv = document.createElement("canvas");
+      cv.width = W; cv.height = H;
+      const ctx = cv.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, W, H);
+      ctx.drawImage(img, 0, 0, W, H);
+      cv.toBlob(function(b){
+        if(!b){ reject(new Error("图片编码失败")); return; }
+        b.arrayBuffer().then(function(ab){
+          resolve({ bytes:new Uint8Array(ab), w:W, h:H });
+        });
+      }, "image/jpeg", 0.93);
+    };
+    img.onerror = function(){ reject(new Error("SVG 栅格化失败")); };
+    img.src = url;
+  });
+}
+
+function buildPdf(total, L, imgs){
+  const enc = new TextEncoder();
+  const chunks = [];
+  let size = 0;
+  function put(x){
+    const b = (typeof x === "string") ? enc.encode(x) : x;
+    chunks.push(b); size += b.length; return size;
+  }
+  function f(n){ return (Math.round(n*100)/100).toFixed(2); }
+
+  const pageW = L.page.w * MM2PT, pageH = L.page.h * MM2PT;
+  const cardW = L.cardW * MM2PT, cardH = L.cardH * MM2PT;
+  const gap = PRINT.gap * MM2PT, mg = PRINT.margin * MM2PT;
+  const per = L.per;
+  const pageCount = Math.max(1, Math.ceil(total / per));
+
+  /* 对象编号：1 目录 / 2 页树 / 3.. 每页（页对象 + 内容流）/ 之后是图片 */
+  const catalogId = 1, pagesId = 2;
+  let next = 3;
+  const pageIds = [], contentIds = [];
+  for(let p=0;p<pageCount;p++){ pageIds.push(next++); contentIds.push(next++); }
+  const imgIds = [];
+  for(let i=0;i<total;i++) imgIds.push(next++);
+
+  const offsets = new Array(next).fill(0);
+  function obj(id, body){ offsets[id] = size; put(id + " 0 obj\n" + body + "\nendobj\n"); }
+
+  put("%PDF-1.4\n");
+
+  /* 每页内容流 */
+  const contents = [];
+  for(let p=0;p<pageCount;p++){
+    const start = p*per, end = Math.min(start+per, total);
+    let st = "";
+    const used = [];
+    for(let i=start;i<end;i++){
+      const k = i - start;
+      const col = k % L.cols, row = Math.floor(k / L.cols);
+      const x = mg + col*(cardW + gap);
+      const y = pageH - mg - row*(cardH + gap) - cardH;
+      st += "q\n" + f(cardW) + " 0 0 " + f(cardH) + " " + f(x) + " " + f(y) + " cm\n/Im" + k + " Do\nQ\n";
+      used.push({ k:k, id:imgIds[i] });
+    }
+    contents.push({ stream:st, used:used });
+  }
+
+  /* 图片对象 */
+  for(let i=0;i<total;i++){
+    const im = imgs[i];
+    offsets[imgIds[i]] = size;
+    put(imgIds[i] + " 0 obj\n<< /Type /XObject /Subtype /Image /Width " + im.w + " /Height " + im.h
+      + " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " + im.bytes.length + " >>\nstream\n");
+    put(im.bytes);
+    put("\nendstream\nendobj\n");
+  }
+
+  /* 内容流对象 */
+  for(let p=0;p<pageCount;p++){
+    obj(contentIds[p], "<< /Length " + contents[p].stream.length + " >>\nstream\n" + contents[p].stream + "endstream");
+  }
+
+  obj(pagesId, "<< /Type /Pages /Count " + pageCount + " /Kids [" + pageIds.map(function(id){ return id + " 0 R"; }).join(" ") + "] >>");
+
+  for(let p=0;p<pageCount;p++){
+    const xo = contents[p].used.map(function(u){ return "/Im" + u.k + " " + u.id + " 0 R"; }).join(" ");
+    obj(pageIds[p], "<< /Type /Page /Parent " + pagesId + " 0 R /MediaBox [0 0 " + f(pageW) + " " + f(pageH) + "]"
+      + " /Resources << /XObject << " + xo + " >> /ProcSet [/PDF /ImageC] >>"
+      + " /Contents " + contentIds[p] + " 0 R >>");
+  }
+
+  obj(catalogId, "<< /Type /Catalog /Pages " + pagesId + " 0 R >>");
+
+  /* 交叉引用表 */
+  const xrefOff = size;
+  let xref = "xref\n0 " + next + "\n0000000000 65535 f \n";
+  for(let id=1; id<next; id++){
+    xref += String(offsets[id]).padStart(10, "0") + " 00000 n \n";
+  }
+  put(xref);
+  put("trailer\n<< /Size " + next + " /Root " + catalogId + " 0 R >>\nstartxref\n" + xrefOff + "\n%%EOF\n");
+
+  /* 合并成字节流 */
+  const out = new Uint8Array(size);
+  let pos = 0;
+  for(let i=0;i<chunks.length;i++){ out.set(chunks[i], pos); pos += chunks[i].length; }
+  return out;
+}
+
+async function exportPDF(){
+  const cards = state.selected.slice();
+  if(!cards.length){ toast("先选几个站点再导出"); return; }
+  const L = layout();
+  const btn = $("btnPdf");
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "生成中…";
+  try{
+    /* 张数很多时自动降一点分辨率，避免 PDF 过大 */
+    const dpi = cards.length > 60 ? 150 : (cards.length > 30 ? 200 : PRINT.dpi);
+    const pxPerMm = dpi / 25.4;
+    const W = Math.round(L.cardW * pxPerMm);
+    const H = Math.round(L.cardH * pxPerMm);
+    const imgs = [];
+    for(let i=0;i<cards.length;i++){
+      imgs.push(await cardJpeg(cards[i], W, H));
+      if(i % 4 === 3) await new Promise(function(r){ setTimeout(r, 0); });
+    }
+    const bytes = buildPdf(cards.length, L, imgs);
+    const blob = new Blob([bytes], { type:"application/pdf" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "无锡地铁站名卡_" + PRINT.paper + "_" + cards.length + "张.pdf";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 8000);
+    toast("已导出 PDF：" + cards.length + " 张 / " + Math.ceil(cards.length / L.per) + " 页 · " + dpi + "dpi");
+  }catch(err){
+    toast("导出失败：" + (err && err.message ? err.message : err));
+  }finally{
+    btn.disabled = false;
+    btn.textContent = old;
+  }
+}
+
+function applyPageStyle(){
+  const L = layout();
+  let st = document.getElementById("pageStyle");
+  if(!st){ st = document.createElement("style"); st.id = "pageStyle"; document.head.appendChild(st); }
+  st.textContent = "@page{ size:" + L.page.w + "mm " + L.page.h + "mm; margin:0; }";
+}
+
+function updatePdfInfo(){
+  const L = layout();
+  const n = state.selected.length;
+  const charH4 = (L.cardW * Math.min(zhSize(4) * OPT.zhScale, 118) / 640).toFixed(1);
+  const charH2 = (L.cardW * Math.min(zhSize(2) * OPT.zhScale, 118) / 640).toFixed(1);
+  $("pdfInfo").textContent = L.per + " 张 / 页";
+  $("pdfHint").innerHTML = PRINT.paper + " " + (PRINT.orient === "portrait" ? "纵向" : "横向")
+    + " · 卡片 " + L.cardW.toFixed(0) + "×" + L.cardH.toFixed(1) + "mm"
+    + " · 每页 " + L.per + " 张（" + L.cols + "×" + L.rows + "）"
+    + (n ? " · 当前 " + n + " 张 → " + Math.ceil(n / L.per) + " 页" : "")
+    + "<br>汉字实际高度约 " + charH4 + "mm（4 字站名）／" + charH2 + "mm（2 字站名）；"
+    + "想让孩子看得更清楚可把「站名字号」调到 130%+，或改用大卡。";
+}
+
+/* ==========================================================
+   7. 事件绑定
+   ========================================================== */
+$("chips").addEventListener("click", function(e){
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  const l = chip.dataset.l;
+  if(l === "__all"){ state.filterLines = []; }
+  else{
+    const i = state.filterLines.indexOf(l);
+    if(i >= 0) state.filterLines.splice(i,1); else state.filterLines.push(l);
+  }
+  renderChips(); renderList();
+});
+
+$("list").addEventListener("click", function(e){
+  const row = e.target.closest(".station");
+  if(!row) return;
+  const st = STATIONS.find(function(s){ return s.key === row.dataset.key; });
+  if(!st) return;
+  const idx = state.selected.findIndex(function(c){ return c.key === st.key; });
+  if(idx >= 0) removeAt(idx); else addStation(st);
+  renderList(); renderBoard(); save();
+});
+
+$("q").addEventListener("input", function(e){ state.q = e.target.value; renderList(); });
+
+$("btnAddCustom").addEventListener("click", function(){
+  const zh = $("cZh").value.trim();
+  if(!zh){ $("cZh").focus(); toast("先写个站点名吧"); return; }
+  const term = $("cTerm").value.trim();
+  const lines = [];
+  document.querySelectorAll(".cln:checked").forEach(function(b){
+    const L = lineBadge(b.value);
+    if(term){
+      const parts = term.split(/[⇄→~—\-]{1,2}/).map(function(x){ return x.trim(); }).filter(Boolean);
+      if(parts.length >= 2){ L.from = parts[0]; L.to = parts[1]; }
+    }
+    lines.push(L);
+  });
+  $("cExtra").value.split(";").forEach(function(seg){
+    seg = seg.trim(); if(!seg) return;
+    const p = seg.split(",");
+    const t = (p[0] || "").trim();
+    if(!t) return;
+    lines.push({ t:t, c:(p[1] || "").trim() || "#6b7280", from:(p[2] || "").trim(), to:(p[3] || "").trim() });
+  });
+  const card = { zh:zh, en:$("cEn").value.trim(), lines:lines, key:"c:" + zh + ":" + Date.now() };
+  state.selected.push(card);
+  $("cZh").value = ""; $("cEn").value = ""; $("cTerm").value = ""; $("cExtra").value = "";
+  document.querySelectorAll(".cln:checked").forEach(function(b){ b.checked = false; });
+  renderBoard(); save();
+  toast("已生成：" + zh);
+});
+
+$("btnAddLine").addEventListener("click", function(){
+  const t = $("selLine").value;
+  if(!t){ toast("先选一条线路"); return; }
+  let n = 0;
+  STATIONS.forEach(function(st){
+    if(st.lines.some(function(L){ return L.t === t; })){
+      if(addStation(st)) n++;
+    }
+  });
+  renderList(); renderBoard(); save();
+  toast(n ? ("已加入 " + t + " 的 " + n + " 个站点") : (t + " 的站点都已在列表里了"));
+});
+
+$("btnRandom").addEventListener("click", function(){
+  const pool = STATIONS.slice();
+  state.selected = [];
+  for(let i=0;i<7 && pool.length;i++){
+    state.selected.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  }
+  renderList(); renderBoard(); save();
+});
+
+$("btnClear").addEventListener("click", function(){
+  if(!state.selected.length) return;
+  state.selected = [];
+  renderList(); renderBoard(); save();
+  toast("已清空");
+});
+
+$("btnDownAll").addEventListener("click", function(){
+  const list = state.selected.slice();
+  if(!list.length){ toast("还没有卡片"); return; }
+  if(list.length > 12 && !confirm("要下载 " + list.length + " 张 PNG，浏览器可能提示「允许多个下载」，继续？")) return;
+  let i = 0;
+  (function next(){
+    if(i >= list.length){ toast("全部下载完成"); return; }
+    downloadCard(list[i], function(){ i++; setTimeout(next, 320); });
+  })();
+});
+
+$("btnPrint").addEventListener("click", function(){
+  if(!state.selected.length){ toast("还没有卡片"); return; }
+  switchView("pages");
+  applyPageStyle();
+  setTimeout(function(){ window.print(); }, 350);
+});
+
+$("viewGrid").addEventListener("click", function(){ switchView("grid"); });
+$("viewScatter").addEventListener("click", function(){ switchView("scatter"); });
+$("viewPages").addEventListener("click", function(){ switchView("pages"); });
+
+$("board").addEventListener("click", function(e){
+  const item = e.target.closest(".card-item") || e.target.closest(".sc-item");
+  if(!item) return;
+  const i = parseInt(item.dataset.i, 10);
+  const btn = e.target.closest("button");
+  const act = btn ? btn.dataset.act : "zoom";
+  if(act === "del"){ removeAt(i); renderList(); renderBoard(); save(); return; }
+  openModal(i);
+});
+
+/* 样式控件 */
+function bindStyle(){
+  document.querySelectorAll(".sw").forEach(function(sw){
+    sw.addEventListener("click", function(){
+      OPT.borderColor = sw.dataset.c;
+      $("borderColor").value = OPT.borderColor;
+      setBorderMode("custom");
+      renderBoard(); save();
+    });
+  });
+  $("borderColor").addEventListener("input", function(e){
+    OPT.borderColor = e.target.value; markSw(); renderBoard(); save();
+  });
+  $("bmodeLine").addEventListener("change", function(){ setBorderMode("line"); });
+  $("bmodeCustom").addEventListener("change", function(){ setBorderMode("custom"); });
+  $("optGrad").addEventListener("change", function(e){ OPT.transferGradient = e.target.checked; renderBoard(); save(); });
+  $("borderW").addEventListener("input", function(e){
+    OPT.borderW = +e.target.value; $("borderWv").textContent = OPT.borderW; renderBoard(); save();
+  });
+  $("radius").addEventListener("input", function(e){
+    OPT.radius = +e.target.value; $("radiusv").textContent = OPT.radius; renderBoard(); save();
+  });
+  [["optLogo","logo"],["optBadge","badge"],["optEn","en"],["optFoot","foot"]].forEach(function(p){
+    $(p[0]).addEventListener("change", function(e){
+      OPT[p[1]] = e.target.checked; renderBoard(); save();
+    });
+  });
+}
+/* PDF / 打印相关控件 */
+function bindPrint(){
+  $("pPaper").addEventListener("change", function(e){ PRINT.paper = e.target.value; afterPrintChange(); });
+  $("pOrient").addEventListener("change", function(e){ PRINT.orient = e.target.value; afterPrintChange(); });
+  $("pSize").addEventListener("change", function(e){
+    const v = e.target.value;
+    $("pCustomRow").style.display = (v === "custom") ? "" : "none";
+    if(v !== "custom") PRINT.cardW = parseFloat(v);
+    afterPrintChange();
+  });
+  $("pCustom").addEventListener("input", function(e){
+    const v = parseFloat(e.target.value);
+    if(v >= 30 && v <= 300){ PRINT.cardW = v; afterPrintChange(); }
+  });
+  $("pGap").addEventListener("input", function(e){
+    PRINT.gap = parseFloat(e.target.value); $("pGapv").textContent = PRINT.gap; afterPrintChange();
+  });
+  $("pMargin").addEventListener("input", function(e){
+    PRINT.margin = parseFloat(e.target.value); $("pMarginv").textContent = PRINT.margin; afterPrintChange();
+  });
+  $("zhScale").addEventListener("input", function(e){
+    OPT.zhScale = (+e.target.value) / 100;
+    $("zhScalev").textContent = e.target.value;
+    renderBoard(); save();
+  });
+  $("pCut").addEventListener("change", function(e){ PRINT.cut = e.target.checked; afterPrintChange(); });
+  $("btnPdf").addEventListener("click", exportPDF);
+  $("btnPdfTop").addEventListener("click", exportPDF);
+  window.addEventListener("resize", function(){
+    if(state.view === "pages" && state.selected.length) renderPages();
+  });
+}
+function afterPrintChange(){
+  applyPageStyle(); syncPrintUI(); renderBoard(); save();
+}
+function syncPrintUI(){
+  $("pPaper").value = PRINT.paper;
+  $("pOrient").value = PRINT.orient;
+  const preset = ["126","95","85","63"];
+  const isPreset = preset.indexOf(String(PRINT.cardW)) >= 0;
+  $("pSize").value = isPreset ? String(PRINT.cardW) : "custom";
+  $("pCustomRow").style.display = isPreset ? "none" : "";
+  $("pCustom").value = PRINT.cardW;
+  $("pGap").value = PRINT.gap; $("pGapv").textContent = PRINT.gap;
+  $("pMargin").value = PRINT.margin; $("pMarginv").textContent = PRINT.margin;
+  $("pCut").checked = PRINT.cut;
+  const zs = Math.round((OPT.zhScale || 1) * 100);
+  $("zhScale").value = zs; $("zhScalev").textContent = zs;
+  updatePdfInfo();
+}
+function setBorderMode(mode){
+  OPT.borderMode = mode;
+  $("bmodeLine").checked = (mode === "line");
+  $("bmodeCustom").checked = (mode === "custom");
+  $("customColorBox").classList.toggle("dim", mode !== "custom");
+  markSw();
+  renderBoard(); save();
+}
+function markSw(){
+  document.querySelectorAll(".sw").forEach(function(sw){
+    sw.classList.toggle("on", sw.dataset.c.toLowerCase() === String(OPT.borderColor).toLowerCase());
+  });
+}
+function syncStyleUI(){
+  $("borderColor").value = OPT.borderColor;
+  $("optGrad").checked = OPT.transferGradient;
+  $("borderW").value = OPT.borderW; $("borderWv").textContent = OPT.borderW;
+  $("radius").value = OPT.radius; $("radiusv").textContent = OPT.radius;
+  $("optLogo").checked = OPT.logo; $("optBadge").checked = OPT.badge;
+  $("optEn").checked = OPT.en; $("optFoot").checked = OPT.foot;
+  $("bmodeLine").checked = (OPT.borderMode === "line");
+  $("bmodeCustom").checked = (OPT.borderMode === "custom");
+  $("customColorBox").classList.toggle("dim", OPT.borderMode !== "custom");
+  markSw();
+}
+
+/* 弹窗 */
+let modalIdx = -1;
+function openModal(i){
+  modalIdx = i;
+  const card = state.selected[i];
+  if(!card) return;
+  $("modalTitle").textContent = card.zh + (card.en ? " · " + card.en : "");
+  $("modalCard").innerHTML = cardSVG(card, OPT);
+  $("modal").classList.add("on");
+}
+function closeModal(){ $("modal").classList.remove("on"); modalIdx = -1; }
+$("modalClose").addEventListener("click", closeModal);
+$("modal").addEventListener("click", function(e){ if(e.target === $("modal")) closeModal(); });
+document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeModal(); });
+
+$("modalDown").addEventListener("click", function(){
+  if(modalIdx < 0) return;
+  downloadCard(state.selected[modalIdx], null);
+});
+$("modalSvg").addEventListener("click", function(){
+  if(modalIdx < 0) return;
+  const card = state.selected[modalIdx];
+  const blob = new Blob([cardSVG(card, OPT)], { type:"image/svg+xml;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "无锡地铁_" + slug(card.zh) + ".svg";
+  document.body.appendChild(a); a.click(); a.remove();
+});
+$("modalCopy").addEventListener("click", function(){
+  if(modalIdx < 0) return;
+  const card = state.selected[modalIdx];
+  svgToCanvas(cardSVG(card, OPT), 2, function(cv){
+    cv.toBlob(function(blob){
+      if(!navigator.clipboard || !window.ClipboardItem){ toast("当前浏览器不支持复制图片，请用下载"); return; }
+      navigator.clipboard.write([ new ClipboardItem({ "image/png": blob }) ])
+        .then(function(){ toast("已复制到剪贴板"); })
+        .catch(function(){ toast("复制被拒绝，请用下载"); });
+    }, "image/png");
+  });
+});
+
+/* ==========================================================
+   8. 启动
+   ========================================================== */
+document.getElementById("brandLogo").src = WX_LOGO;
+load();
+applyPageStyle();
+syncStyleUI();
+syncPrintUI();
+bindStyle();
+bindPrint();
+renderAll();
+</script>
+</body>
+</html>
