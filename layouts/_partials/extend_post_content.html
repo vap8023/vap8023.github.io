@@ -1,0 +1,20 @@
+{{- /* --------------------------------------------------------------
+     文章页分类入口
+     背景：PaperMod 的 single.html 里写死了只渲染标签
+     （$.GetTerms .Language.Params.Taxonomies.tag），分类没有任何输出位置，
+     于是只在 front matter 写了 categories 的文章，分类在页面上完全不可见。
+     这里使用主题预留的钩子 partial（该文件在主题中为空壳，且注释明确写明
+     「Can be overwritten by partial with the same name in the global layouts」），
+     在正文与标签之间补一行分类链接，不改动主题任何文件。
+     样式见 assets/css/extended/custom.css 的 .post-categories
+     -------------------------------------------------------------- */ -}}
+{{- $page := . }}
+{{- $taxonomy := .Language.Params.Taxonomies.category | default "categories" }}
+{{- with $page.GetTerms $taxonomy }}
+<ul class="post-categories">
+  <li class="post-categories-label">分类</li>
+  {{- range . }}
+  <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+  {{- end }}
+</ul>
+{{- end }}

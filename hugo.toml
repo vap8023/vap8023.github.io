@@ -3,6 +3,10 @@ baseURL = 'https://vap8023.github.io/'
 title = 'LeLe Blog'
 # PaperMod 主题内置搜索等使用 JSON 输出
 locale = 'zh-cn'
+# 站点时区：front matter 里只写日期（如 date: 2026-09-27）时，Hugo 默认按 UTC 解析，
+# 于是「北京时间当天 00:00–08:00」这个区间内发的文章会被判定为未来文章而整篇不构建
+# （表现为文章 404、分类/标签页空白）。设为本机时区后按北京时间解析，问题不再出现。
+timeZone = 'Asia/Shanghai'
 theme = ['PaperMod']
 
 enableRobotsTXT = true
@@ -73,12 +77,17 @@ pygmentsUseClasses = true
   url = '/tags/'
   weight = 3
 [[menu.main]]
+  identifier = 'categories'
+  name = '分类'
+  url = '/categories/'
+  weight = 4
+[[menu.main]]
   identifier = 'about'
   name = '关于'
   url = '/about/'
-  weight = 4
+  weight = 5
 [[menu.main]]
   identifier = 'search'
   name = '搜索'
   url = '/search/'
-  weight = 5
+  weight = 6

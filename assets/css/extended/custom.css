@@ -19,3 +19,43 @@
 .home-info .entry-header h1 {
     margin-bottom: 6px;
 }
+
+/* --- 文章页分类入口 -----------------------------------------
+   背景：PaperMod 只在文章页渲染标签（single.html 内写死 $.GetTerms "tags"），
+   分类没有输出位置。这里由 layouts/_partials/extend_post_content.html 补上，
+   样式对齐主题原有的 .post-tags，位置在正文与标签之间。
+   注意：主题自身没有任何 .post-categories 规则，这里的类名不会冲突。
+   ------------------------------------------------------------ */
+.post-categories {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 10px 0;            /* 与下方标签行拉开一点间距 */
+}
+
+.post-categories li {
+    display: inline-block;
+}
+
+/* 「分类」二字用纯文本，避免与可点击的药丸样式混淆 */
+.post-categories .post-categories-label {
+    font-size: 14px;
+    line-height: 34px;
+    color: var(--secondary);
+}
+
+.post-categories a {
+    display: block;
+    padding: 0 14px;
+    font-size: 14px;
+    line-height: 34px;
+    color: var(--secondary);
+    border-radius: var(--radius);
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+}
+
+.post-categories a:hover {
+    background: var(--border);
+}
