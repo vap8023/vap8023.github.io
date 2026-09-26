@@ -6,3 +6,6 @@ resources/
 # 本地预览/截图产物
 .playwright-mcp/
 home.png
+
+# WorkBuddy 工作区数据（本地笔记 / 验证截图），仅本地保留
+.workbuddy/
