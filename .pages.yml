@@ -1,32 +1,53 @@
 media:
-input: "assets/images"
-output: "/images"
+  # Hugo 只把 static/ 平铺发布到站点根，图片必须放 static/images 才能以 /images/xxx 访问
+  input: "static/images"
+  output: "/images"
+
 content:
-- name: "posts"
-label: "博客文章"
-type: "collection"
-path: "content/posts"
-create: true
-delete: true
-fields:
-- name: title
-label: 文章标题
-type: string
-- name: date
-label: 发布日期
-type: date
-- name: draft
-label: 草稿状态
-type: boolean
-- name: description
-label: 文章摘要
-type: string
-- name: tags
-label: 标签
-type: list
-- name: categories
-label: 分类
-type: list
-- name: body
-label: 正文内容
-type: markdown
+  - name: "posts"
+    label: "博客文章"
+    type: "collection"
+    path: "content/posts"
+    fields:
+      - name: title
+        label: 文章标题
+        type: string
+      - name: date
+        label: 发布日期
+        type: date
+      - name: draft
+        label: 草稿状态
+        type: boolean
+      - name: description
+        label: 文章摘要
+        type: string
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+      - name: categories
+        label: 分类
+        type: string
+        list: true
+      - name: body
+        label: 正文内容
+        type: rich-text
+
+  # 单页：首页顶部「关于我」卡片的内容源，改这里即可同步首页
+  - name: "pages"
+    label: "单页"
+    type: "file"
+    path: "content/about.md"
+    fields:
+      - name: title
+        label: 页面标题
+        type: string
+      - name: date
+        label: 日期
+        type: date
+      - name: draft
+        label: 草稿状态
+        type: boolean
+      - name: body
+        label: 正文内容
+        type: rich-text

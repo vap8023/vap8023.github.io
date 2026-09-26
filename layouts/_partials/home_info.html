@@ -1,0 +1,29 @@
+{{- /*
+  首页顶部信息卡（覆盖 PaperMod 同名 partial）
+
+  取值优先级：
+    1. content/about.md  → 标题 + 正文（单一数据源，改那篇笔记即可同步首页）
+    2. hugo.toml 的 [params.homeInfoParams] → 兜底
+
+  这样首页不再重复显示站名「LeLe Blog」。
+  注意：site.Params.homeInfoParams 必须存在，否则 list.html 不会调用本模板。
+*/ -}}
+{{- with site.Params.homeInfoParams }}
+{{- $about := site.GetPage "/about" }}
+<article class="first-entry home-info">
+    <header class="entry-header">
+        <h1>{{ with $about }}{{ .Title }}{{ else }}{{ $.Site.Params.homeInfoParams.Title | markdownify }}{{ end }}</h1>
+    </header>
+    <div class="entry-content md-content">
+        {{- with $about }}
+        {{ .Content }}
+        {{- else }}
+        {{- $opts := dict "display" "block" }}
+        {{ $.Site.Params.homeInfoParams.Content | $.Page.RenderString $opts }}
+        {{- end }}
+    </div>
+    <footer class="entry-footer">
+        {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+</article>
+{{- end -}}
