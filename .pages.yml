@@ -1,40 +1,32 @@
 media:
-  input: static/images
-  output: /images
-  extensions: [png, jpg, jpeg, gif, webp, svg]
-
+input: "assets/images"
+output: "/images"
 content:
-  - name: posts
-    label: 博客文章
-    type: collection
-    path: content/posts
-    view:
-      primary: title
-      default:
-        sort: date
-        order: desc
-    fields:
-      - name: title
-        label: 文章标题
-        type: string
-        required: true
-      - name: date
-        label: 发布日期
-        type: date
-      - name: draft
-        label: 草稿状态
-        type: boolean
-      - name: description
-        label: 文章摘要
-        type: text
-      - name: tags
-        label: 标签
-        type: string
-        list: true
-      - name: categories
-        label: 分类
-        type: string
-        list: true
-      - name: body
-        label: 正文内容
-        type: markdown
+- name: "posts"
+label: "博客文章"
+type: "collection"
+path: "content/posts"
+create: true
+delete: true
+fields:
+- name: title
+label: 文章标题
+type: string
+- name: date
+label: 发布日期
+type: date
+- name: draft
+label: 草稿状态
+type: boolean
+- name: description
+label: 文章摘要
+type: string
+- name: tags
+label: 标签
+type: list
+- name: categories
+label: 分类
+type: list
+- name: body
+label: 正文内容
+type: markdown
